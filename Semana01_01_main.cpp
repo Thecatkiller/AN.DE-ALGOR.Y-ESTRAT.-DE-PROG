@@ -28,8 +28,15 @@ int main() {
 	
 	bool resp = buscarCiudad(lista,n,vb);
 	
-	cout << resp;
+	//Usando operador ternario
+	//cout << "Ciudad " <<vb << (resp ? " " : " no ") << "encontrada";
 	
+	//Usando estructura condicional con if
+	if(resp){
+		cout << "Ciudad "<< vb << " encontrada";
+	}else{
+		cout << "Ciudad "<< vb << " no encontrada";
+	}
 	
 	return 0;
 }
