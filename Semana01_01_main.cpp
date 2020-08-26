@@ -4,7 +4,7 @@ using namespace std;
 //Seccion de metodos
 bool buscarCiudad(string lista[],int n,string vbsucar);
 int buscarCiudadIdx(string lista[],int n,string vbsucar);
-
+bool listaCiudadUnica(string lista[],int n);
 
 int main() {
 	
@@ -48,6 +48,8 @@ int main() {
 		cout << "Ciudad "<< vb << " no encontrada" << endl;
 	}
 	
+	cout << listaCiudadUnica(lista,n);
+	
 	return 0;
 }
 
@@ -67,4 +69,10 @@ int buscarCiudadIdx(string lista[],int n,string vbsucar){
 	}
 	return -1;
 }
-
+bool listaCiudadUnica(string lista[],int n){	
+	for (int i = 0; i < n -1; i++) 
+        for (int j = i + 1; j < n; j++) 
+            if (lista[i] == lista[j]) 
+                return false;                    
+    return true;
+}
