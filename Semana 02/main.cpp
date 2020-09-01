@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int main() {
+int main1() {
 	
 	string clave = "AMO";
 	int INI = 65, FIN = 90;
