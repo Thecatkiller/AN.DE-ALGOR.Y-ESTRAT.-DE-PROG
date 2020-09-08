@@ -32,7 +32,7 @@ void factoresPrimos(int n){
 }
 
 void factoresPrimosV2(int n){
-	int contador;
+	int contador = 0;
 	int i = 2;
 	while(n > 1){
 		while(n % i == 0){
