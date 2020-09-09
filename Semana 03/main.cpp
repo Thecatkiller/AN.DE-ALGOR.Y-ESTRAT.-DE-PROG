@@ -42,10 +42,11 @@ void factoresPrimosV2(int n){
 				
 		if(contador>0){
 			cout << i << "^" << contador << endl;
+			contador = 0;	
 		}
 		
 		i++;
-		contador = 0;			
+				
 	}
 		
 }
