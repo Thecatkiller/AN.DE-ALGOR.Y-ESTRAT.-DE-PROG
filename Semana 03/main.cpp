@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string> 
 using namespace std;
 
 
@@ -7,7 +8,7 @@ void factoresPrimos(int n);
 void factoresPrimosV2(int n);
 vector<int> factoresPrimosV3(int n);
 
-int main() {
+int main1() {
 		
 	int n;		
 	cout << "Ingrese un numero :";
@@ -20,7 +21,7 @@ int main() {
 	vector<int> result = factoresPrimosV3(n);
 	
 	for(int i=0;i < result.size();i++){
-		cout<< result.at(i) << (i != result.size() -1 ? "x" : "=");
+		cout<< result.at(i) << (i != result.size() -1 ? "x" : "=" );
 	}
 	cout<< n;
 	
