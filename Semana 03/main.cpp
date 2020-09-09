@@ -17,8 +17,12 @@ int main() {
 	cout << endl;
 	factoresPrimosV2(n);	
 	cout << endl;
-	factoresPrimosV3(n);
+	vector<int> result = factoresPrimosV3(n);
 	
+	for(int i=0;i < result.size();i++){
+		cout<< result.at(i) << (i != result.size() -1 ? "x" : "=");
+	}
+	cout<< n;
 	
 	
 	return 0;
