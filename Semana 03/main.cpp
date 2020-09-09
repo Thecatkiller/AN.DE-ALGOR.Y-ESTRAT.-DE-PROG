@@ -1,9 +1,11 @@
 #include <iostream>
+#include <vector>
 using namespace std;
-/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+
 
 void factoresPrimos(int n);
 void factoresPrimosV2(int n);
+vector<int> factoresPrimosV3(int n);
 
 int main() {
 		
@@ -14,6 +16,10 @@ int main() {
 	factoresPrimos(n);
 	cout << endl;
 	factoresPrimosV2(n);	
+	cout << endl;
+	factoresPrimosV3(n);
+	
+	
 	
 	return 0;
 }
@@ -49,5 +55,19 @@ void factoresPrimosV2(int n){
 				
 	}
 		
+}
+
+vector<int> factoresPrimosV3(int n){
+	vector<int> lista;
+		
+	int i = 2;
+	while(n > 1){
+		while(n % i == 0){
+			lista.push_back(i);
+			n = n / i;		
+		}		
+		i++;			
+	}
+	return lista;
 }
 
