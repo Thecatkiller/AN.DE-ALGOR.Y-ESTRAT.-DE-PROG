@@ -9,6 +9,9 @@ using namespace std;
 char menuPrincipal();
 int sumar(int lista[],int n);
 double promedio(int lista[],int n);
+int mayor(int lista[], int inicio, int fin);
+
+
 int main() {	
 	char mopc; 
 	int lista[] = {15,25,13,18,14};
@@ -32,6 +35,9 @@ int main() {
 				
 				break;					
 			case OPC_MAYOR:
+				
+				cout << mayor(lista,0,tam - 1) << endl;
+				
 				break;
 		}
 		
@@ -66,4 +72,12 @@ double promedio(int lista[],int n){
 	return suma / (double) n;
 }
 
+int mayor(int lista[], int inicio, int fin){
+	if(inicio == fin) return lista[inicio];
+	int medio = (inicio + fin) / 2;
+	int izq = mayor(lista,inicio, medio);
+	int der = mayor(lista,medio + 1, fin);
+	
+	return max(izq,der);
+}
 
