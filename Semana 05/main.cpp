@@ -8,7 +8,7 @@ using namespace std;
 
 char menuPrincipal();
 int sumar(int lista[],int n);
-
+double promedio(int lista[],int n);
 int main() {	
 	char mopc; 
 	int lista[] = {15,25,13,18,14};
@@ -27,6 +27,9 @@ int main() {
 				
 				break;						
 			case OPC_PROMEDIO:
+				
+				cout << promedio(lista,tam) << endl;
+				
 				break;					
 			case OPC_MAYOR:
 				break;
@@ -40,6 +43,7 @@ int main() {
 
 
 char menuPrincipal(){
+	system("cls");
 	cout << "Menu Principal" << endl;
 	cout << "[1] Sumar     " << endl; 
 	cout << "[2] Promedio  " << endl; 
@@ -56,4 +60,10 @@ int sumar(int lista[],int n){
         return 0; 
     return (sumar(lista, n - 1) + lista[n - 1]); 
 }
+
+double promedio(int lista[],int n){
+	int suma = sumar(lista,n);
+	return suma / (double) n;
+}
+
 
