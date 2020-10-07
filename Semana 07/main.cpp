@@ -16,8 +16,9 @@ void ordenarBUR(int lista[],int n);
 void ordenarSEL(int lista[],int n);                     
 int busquedaBinITE(int lista[],int inicial,int final,int vb);
 int busquedaBinREC(int lista[],int inicial,int final,int vb);
-int valorBusqueda();
-
+int valorBusqueda(string texto);
+int factorialITE(int n);
+int factorialREC(int n);
 
 int main() {
 	char op = 'A';
@@ -74,7 +75,7 @@ int main() {
 				break;
 		    }	
 			case '7':{
-				vbuscar = valorBusqueda();
+				vbuscar = valorBusqueda("Ingrese valor buscado :");
 				
 				int idx = busquedaBinITE(lista,0,n-1,vbuscar);
 				if(idx < 0){
@@ -86,7 +87,7 @@ int main() {
 				break;
 			}
 			case '8':{
-			vbuscar = valorBusqueda();
+			vbuscar = valorBusqueda("Ingrese valor buscado :");
 				
 				int idx = busquedaBinREC(lista,0,n-1,vbuscar);
 				if(idx < 0){
@@ -96,7 +97,17 @@ int main() {
 				}
 				
 				break;
-			}    					
+			}    
+			case 'A':{
+				int num = valorBusqueda("Ingrese valor :");
+				cout << endl << factorialITE(num) << endl;
+				break;
+			}		
+			case 'B':{
+				int num = valorBusqueda("Ingrese valor :");
+				cout << endl << factorialREC(num) << endl;
+				break;
+			}			
 			case '9':{
 				cout << endl << "salir" << endl;	
 				break;
@@ -123,7 +134,9 @@ char menu(){
 	cout << "[5] Ordenar (Bur)  " << endl;
 	cout << "[6] Ordenar (Sel)  " << endl;
 	cout << "[7] Busqueda BIN (ITE)  " << endl;
-	cout << "[8] Busqueda BIN(REC)  " << endl;
+	cout << "[8] Busqueda BIN (REC)  " << endl;
+	cout << "[A] Factorial (ITE)    " << endl;
+	cout << "[B] Factorial (REC)    " << endl;
 	cout << "[9] Salir          " << endl;
 	cout << "Seleccione opción:";	
 	return getche();			
@@ -222,9 +235,26 @@ int busquedaBinREC(int lista[],int inicial,int final,int vb){
 	return -1;
 }
 
-int valorBusqueda(){
+int valorBusqueda(string texto){
 	int v;
-	cout<< endl <<"Ingrese valor buscado :"<<endl;
+	cout<< endl << texto <<endl;
 	cin>>v;
 	return v;
 }
+
+int factorialITE(int n){
+	int resp = 1;
+	
+	for(int i=n;i>1;i--){
+		resp *= i;
+	}
+	
+	return resp;
+}
+
+int factorialREC(int n){
+	if(n <= 1)
+		return 1;
+	return n * factorialREC(n - 1);
+}
+
