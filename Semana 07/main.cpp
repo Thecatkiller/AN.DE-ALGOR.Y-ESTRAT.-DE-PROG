@@ -122,7 +122,7 @@ char menu(){
 	cout << "[4] Sumar ITE      " << endl;
 	cout << "[5] Ordenar (Bur)  " << endl;
 	cout << "[6] Ordenar (Sel)  " << endl;
-	cout << "[7] Busqueda BIN (Sel)  " << endl;
+	cout << "[7] Busqueda BIN (ITE)  " << endl;
 	cout << "[8] Busqueda BIN(REC)  " << endl;
 	cout << "[9] Salir          " << endl;
 	cout << "Seleccione opción:";	
