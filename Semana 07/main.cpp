@@ -33,6 +33,8 @@ int busquedaBinREC(int lista[],int inicial,int final,int vb);
 int valorBusqueda(string texto);
 int factorialITE(int n);
 int factorialREC(int n);
+int recursivo1(int n,int aux);
+int recursivo2(int n);
 
 int main() {
 	char op = 'A';
@@ -121,6 +123,18 @@ int main() {
 				int num = valorBusqueda("Ingrese valor :");
 				cout << endl << factorialREC(num) << endl;
 				break;
+			}
+			case 'C':{
+				int num = valorBusqueda("Ingrese valor n:");
+				int num_aux = valorBusqueda("Ingrese valor aux:");
+				
+				cout << endl << recursivo1(num,num_aux) << endl;
+				break;
+			}
+			case 'D':{
+				int num = valorBusqueda("Ingrese valor n:");
+				cout << endl << recursivo2(num) << endl;
+				break;
 			}			
 			case OPC_SALIR:{
 				cout << endl << "salir" << endl;	
@@ -151,6 +165,8 @@ char menu(){
 	cout << "[8] Busqueda BIN (REC)  " << endl;
 	cout << "[A] Factorial (ITE)    " << endl;
 	cout << "[B] Factorial (REC)    " << endl;
+	cout << "[C] Recursivo 1    " << endl;
+	cout << "[D] Recursivo 2    " << endl;
 	cout << "[9] Salir          " << endl;
 	cout << "Seleccione opción:";	
 	return toupper(getche());			
@@ -272,3 +288,13 @@ int factorialREC(int n){
 	return n * factorialREC(n - 1);
 }
 
+int recursivo1(int n, int aux){
+	if (n==0) return aux;	
+	return recursivo1(n/10, aux*10 + n%10);
+}
+ 
+ 
+int recursivo2(int n){
+	if (n==1) return 1;
+	return n%2 + 10 * recursivo2(n/2);
+}
