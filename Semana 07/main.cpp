@@ -3,6 +3,20 @@
 #include <ctime> 
 #include <conio.h>
 
+
+#define OPC_GENERAR       '1'
+#define OPC_MOSTRAR       '2'
+#define OPC_SUMAR_REC     '3'
+#define OPC_SUMAR_ITE     '4'
+#define OPC_ORDENAR_BUR   '5'
+#define OPC_ORDENAR_SEL   '6'
+#define OPC_BUSCAR_ITE    '7'
+#define OPC_BUSCAR_REC    '8'
+#define OPC_SALIR         '9'
+#define OPC_FACTORIAL_ITE 'A'
+#define OPC_FACTORIAL_REC 'B'
+
+
 using namespace std;
 
 char menu();
@@ -28,17 +42,17 @@ int main() {
 	while (op != '9'){		
 		op = menu();		
 		switch (op){			
-			case '1':{
+			case OPC_GENERAR :{
 				cout << endl << "generar" << endl;				
 				n = generarLista();
 				break;
 			}
-			case '2':{
+			case OPC_MOSTRAR:{
 				cout << endl << "mostrar" << endl;		
 				mostrarLista(lista,0,n);			
 				break;
 			}
-			case '3':{
+			case OPC_SUMAR_REC:{
 				ti=clock();
 				cout << endl << "Sumar (REC):" << endl;				
 				cout << sumarREC(lista,0,n-1) << endl;;	
@@ -47,7 +61,7 @@ int main() {
 				cout<<"Tiempo transcurrido (seg):" <<tt<<endl;		
 				break;
 			}			
-			case '4':{			
+			case OPC_SUMAR_ITE:{			
 				ti = clock(); 
 				cout << endl << "Suma (ite):";
 				cout << sumarITE(lista,0,n-1) << endl;				
@@ -56,7 +70,7 @@ int main() {
 				cout << "Tiempo transcurrido (seg):" << tt << endl;
 				break;
 			}
-			case '5':{												
+			case OPC_ORDENAR_BUR:{												
 				ti = clock();
 				cout << endl << "Ordenar (Bur):" << endl;
 				ordenarBUR(lista,n);
@@ -65,7 +79,7 @@ int main() {
 				cout << "Tiempo (seg):" << tt << endl;								
 				break;
 		    }
-		    case '6':{												
+		    case OPC_ORDENAR_SEL:{												
 				ti = clock();
 				cout << endl << "Ordenar (SEL):" << endl;
 				ordenarSEL(lista,n);
@@ -74,7 +88,7 @@ int main() {
 				cout << "Tiempo (seg):" << tt << endl;								
 				break;
 		    }	
-			case '7':{
+			case OPC_BUSCAR_ITE:{
 				vbuscar = valorBusqueda("Ingrese valor buscado :");
 				
 				int idx = busquedaBinITE(lista,0,n-1,vbuscar);
@@ -86,7 +100,7 @@ int main() {
 				
 				break;
 			}
-			case '8':{
+			case OPC_BUSCAR_REC:{
 			vbuscar = valorBusqueda("Ingrese valor buscado :");
 				
 				int idx = busquedaBinREC(lista,0,n-1,vbuscar);
@@ -98,17 +112,17 @@ int main() {
 				
 				break;
 			}    
-			case 'A':{
+			case OPC_FACTORIAL_ITE:{
 				int num = valorBusqueda("Ingrese valor :");
 				cout << endl << factorialITE(num) << endl;
 				break;
 			}		
-			case 'B':{
+			case OPC_FACTORIAL_REC:{
 				int num = valorBusqueda("Ingrese valor :");
 				cout << endl << factorialREC(num) << endl;
 				break;
 			}			
-			case '9':{
+			case OPC_SALIR:{
 				cout << endl << "salir" << endl;	
 				break;
 			} 					
@@ -139,7 +153,7 @@ char menu(){
 	cout << "[B] Factorial (REC)    " << endl;
 	cout << "[9] Salir          " << endl;
 	cout << "Seleccione opción:";	
-	return getche();			
+	return toupper(getche());			
 }
 
 int generarLista(){
