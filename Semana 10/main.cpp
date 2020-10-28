@@ -6,6 +6,9 @@ using namespace std;
 long  fibREC(int n);
 long  fibITE(int n);
 long* fibPD(int n);
+int coeBinREC(int n,int k);
+unsigned long long binomialFormula(int n, int k);
+unsigned long long* factPD(int n);
 
 char menuPD();
 void menuCB();
@@ -108,7 +111,7 @@ long* fibPD(int n){
 
 void menuCB(){
 	char op;
-	
+	int n,k;	
 	do{	
 		system("cls");
 		setlocale(LC_ALL,"spanish");
@@ -121,6 +124,48 @@ void menuCB(){
 		cout <<"[9] Regresar menu principal" << endl;
 		cout << "Seleccione opción: ";	
 	    op=toupper(getche());
-			
+	    switch (op){
+	    	case '1':{	    			
+				cout << endl << "Digite numeros:" << endl;
+				cout << "n: "; cin >> n;
+				cout << "k: "; cin >> k;				
+				cout << endl << "coebin (rec):" << coeBinREC(n,k) << endl;					    						
+				break;
+			}
+			case '2':{	    			
+				cout << endl << "Digite numeros:" << endl;
+				cout << "n: "; cin >> n;
+				cout << "k: "; cin >> k;				
+				cout << endl << "coebin (formula):" << binomialFormula(n,k) << endl;					    						
+				break;
+			}
+						
+		}		
+		system("pause");	
 	} while(op!='9');
 }
+
+int coeBinREC(int n,int k){
+    if(k == 0 || n == k) return 1;	
+    return coeBinREC(n-1,k-1) + coeBinREC(n-1,k);	
+}
+
+
+unsigned long long* factPD(int n){
+	unsigned long long* lista = new unsigned long long[n+1];		
+	lista[1] = lista[0] = 1;
+	for(int i=2;i<=n;i++){
+		lista[i] = lista[i-1] * i;
+	}		
+	return lista;
+}
+
+unsigned long long binomialFormula(int n, int k){
+	unsigned long long * b = factPD(n);	
+   return (b[n] / (  b[k] * b[n-k] ) );
+}
+
+
+
+
+
