@@ -13,7 +13,7 @@ unsigned long long coeBinPD(int k, int n);
 char menuPD();
 void menuCB();
 
-int main() {
+int main2() {
 	char opc;
 	int n;
 	do{
