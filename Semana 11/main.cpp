@@ -175,7 +175,7 @@ unsigned long long binomialFormula(int n, int k){
 unsigned long long coeBinPD(int n, int k){
 	unsigned long long m[n][k +1] = {};
 	
-
+	if(n == k || k == 0) return 1;
 
 	for (int f = 0; f < n; f++)
 	{
@@ -198,7 +198,14 @@ unsigned long long coeBinPD(int n, int k){
 		}
 	}
 
-	
+	for (int f = 0; f < n; f++)
+	{
+		for (int c = 0; c <= k; c++)
+		{
+			cout << "\t" << m[f][c] << "\t";
+		}
+		cout << endl;
+	}	
 
 
 	return m[n-1][k-1] + m[n-1][k];
