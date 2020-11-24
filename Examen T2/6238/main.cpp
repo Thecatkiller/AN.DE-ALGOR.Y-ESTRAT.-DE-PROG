@@ -19,7 +19,7 @@ struct Equipo{
 	TipoEquipo idTipoEquipo;
 };
 
-
+unsigned long long coeBinPD(int n, int k);
 long* fibPD(int n);
 void pregunta01();
 void pregunta02();
@@ -130,7 +130,21 @@ void pregunta03(){
 	cout << endl << "Digite numero:" << endl;
 	cout << "n: "; cin >> n;
 
-
+	cout << "Serie:" << endl;
+				long long acum = 0, aux;				
+				for (int i = 0, j = n; j > i; i+=3,j-=2){
+					 cout << j << "C" << i << " = ";
+					 
+					 if(i%2==0)
+				        aux = coeBinPD(j, i);
+				     else 
+				     	aux = -coeBinPD(j, i);				        
+				     
+					 acum = acum + aux;
+				     
+					 cout << aux << endl;
+				}
+				cout << endl << "Resp:" << acum << endl;
 
 }
 
@@ -175,6 +189,34 @@ void ordernarBurbuja(Equipo lista[],int n){
 }
 
 
+
+unsigned long long coeBinPD(int n, int k){
+	unsigned long long m[n][k+1] = {};
+	
+	if (n==k || k==0) return 1;
+		
+	for (int f=0;f<n;f++){
+		m[f][0]	= 1;
+	}
+	
+	for (int f=1;f<n;f++){
+		m[f][1] = f;
+	}
+	
+	for (int fc=2; fc<=k ;fc++){
+		m[fc][fc] = 1;
+	}
+	
+	for(int f=3;f<n;f++){
+		for(int c=2;c<=k;c++){
+			m[f][c] = m[f-1][c-1] + m[f-1][c];
+		}
+	}			
+			
+	return  m[n-1][k-1] + m[n-1][k];
+	
+}
+
 char menuPD(){
 	system("color 02");
 	system("cls");
@@ -186,7 +228,7 @@ char menuPD(){
 	cout <<"[2] Pregunta 02            " << endl;
 	cout <<"[3] Pregunta 03             " << endl;
 	cout <<"[9] Salir                    " << endl;
-	cout << "Seleccione opciÃ³n: ";	
+	cout << "Seleccione opción: ";	
 	char op=toupper(getche());
 	return op;		
 }
