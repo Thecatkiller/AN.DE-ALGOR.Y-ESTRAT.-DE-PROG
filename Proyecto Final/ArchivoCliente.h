@@ -16,51 +16,30 @@
 #include "ArchivoCuenta.h"
 #include "Cuenta.h"
 
+#include "ArchivoGenerico.h"
 using namespace std;
 
-class ArchivoCliente{
+class ArchivoCliente : public ArchivoGenerico {
 	private:
-		string ARCHIVO_CLIENTE = "clientes.txt";
-		bool isEnableToRead = false;
-		ifstream aleer;
-		
-		bool existFile()
-		{
-		    return ifstream(ARCHIVO_CLIENTE.c_str()).good();
-		}
-		
-		void leerArchivo() {
-			
-			if(this->existFile() == false){
-				ofstream fescribir;
-				fescribir.open(ARCHIVO_CLIENTE.c_str(),ios::out|ios::app);
-				fescribir.close();
-			}
-			
-			aleer.open(ARCHIVO_CLIENTE.c_str(),ios::in);
-			if (!aleer.is_open()){
-			 	cout << "No se puede abrir el archivo: " << ARCHIVO_CLIENTE << endl;
-				isEnableToRead = false;
-			}
-			isEnableToRead = true;
-		}
+		vector<Cliente*> _listGeneralClientes;	
+		bool _listaYaLeida = false;
 		
 		vector<Cliente*> listar(){
+			//esto hace que no se vuelva a leer la lista si ya se ha leido antes
+			if(_listaYaLeida)
+				return _listGeneralClientes;
+			
 			vector<Cliente*> lst;								
-			leerArchivo();
-			if(isEnableToRead){				
-				while (!aleer.eof()){
-					string codigo;
-					string nombre;
-					string apellidoPaterno;
-					string apellidoMaterno;
-					string DNI;
+			this->leerArchivo();
+			if(isEnableToRead()){				
+				while (!this->_aleer.eof()){
+					string codigo,nombre,apellidoPaterno,apellidoMaterno,DNI;
 					
-					getline(aleer,codigo,';');
-					getline(aleer,nombre,';');
-					getline(aleer,apellidoPaterno,';');
-					getline(aleer,apellidoMaterno,';');
-					getline(aleer,DNI,'\n');	
+					getline(this->_aleer,codigo,';');
+					getline(this->_aleer,nombre,';');
+					getline(this->_aleer,apellidoPaterno,';');
+					getline(this->_aleer,apellidoMaterno,';');
+					getline(this->_aleer,DNI,'\n');	
 								
 					int codigoCliente = std::atoi(codigo.c_str());
 					
@@ -74,91 +53,90 @@ class ArchivoCliente{
 						lst.push_back(cliente);	
 					}									
 				}
-			}			
+			}
+			_listaYaLeida = true;
+			_listGeneralClientes = lst;			
 			return lst;
 		}
 		
+		void ordenarSeleccionByCodigo(vector<Cliente*> &lista){
+			int vecsize = lista.size();
+			for (int j = 0; j < vecsize - 1; ++j) {
+			
+			    int min = j;
+			    for (int i = j+1; i < vecsize; ++i) {
+			        if (lista.at(min)->getCodigo() > lista.at(i)->getCodigo()) {
+			            min = i;
+			        }
+			
+			    }  
+			    if (min != j)
+			        swap(lista.at(j), lista.at(min));
+			}
+		}
+		
+		void ordenarBurbujaByDNI(vector<Cliente*> &lista){
+			int n = lista.size();
+			for(int i=0;i<n;i++){
+				for(int j=0;j<n-(i+1);j++){
+					if(lista.at(j)->getDNI() >lista.at(j+1)->getDNI()){				
+						swap(lista.at(j), lista.at(j+1));
+					}
+				}
+			}		
+		}	
+
+		
+		int busquedaBinariaByCodigo(vector<Cliente*> lista, int inicio, int final, int codigo)
+		{
+			int medio;
+			if(inicio<=final)
+			{
+				medio = (inicio+final)/2;
+				if(lista.at(medio)->getCodigo() == codigo) return medio;
+				else if(lista.at(medio)->getCodigo() > codigo) final=medio-1;
+				else if (lista.at(medio)->getCodigo()<codigo) inicio = medio+1;
+				return busquedaBinariaByCodigo(lista,inicio,final,codigo);
+			}
+			return -1;
+		}
+		
 	public:		
-					
+		ArchivoCliente() : ArchivoGenerico("clientes.txt"){
+			
+		}
+		
 		Cliente* buscarPorCodigo(int codigoCliente){
 			Cliente* cliente = NULL;
-			leerArchivo();
-			if(isEnableToRead){				
-				while (!aleer.eof()){
-					string codigo;
-					string nombre;
-					string apellidoPaterno;
-					string apellidoMaterno;
-					string DNI;
-					
-					getline(aleer,codigo,';');
-					getline(aleer,nombre,';');
-					getline(aleer,apellidoPaterno,';');
-					getline(aleer,apellidoMaterno,';');
-					getline(aleer,DNI,'\n');	
+			
+			vector<Cliente*> list = this->listar();
+			ordenarSeleccionByCodigo(list);
+				
+			int idx = busquedaBinariaByCodigo(list,0,list.size()-1,codigoCliente);
 
-					int codigoLeido = std::atoi(codigo.c_str());
-		
-					if(codigoCliente == codigoLeido){
-						ArchivoUsuario* archivoUsuario = new ArchivoUsuario();
-						ArchivoCuenta* archivoCuenta = new ArchivoCuenta();
-						
-						cliente = new Cliente();
-						cliente->setCodigo(codigoCliente);
-						cliente->setNombre(nombre);
-						cliente->setApellidoPaterno(apellidoPaterno);
-						cliente->setApellidoMaterno(apellidoMaterno);
-						cliente->setDNI(DNI);
-						cliente->setUsuario(archivoUsuario->buscarPorCodigoCliente(cliente->getCodigo()));
-						cliente->setCuentas(archivoCuenta->buscarCuentasPorCliente(cliente->getCodigo()));
-						
-						return cliente;
-					}																													
-				}
-				aleer.close();
-			}				
-			return cliente;		  
+			if(idx >= 0){
+				cliente = new Cliente();
+				ArchivoUsuario* archivoUsuario = new ArchivoUsuario();
+				ArchivoCuenta* archivoCuenta = new ArchivoCuenta();
+				cliente->setUsuario(archivoUsuario->buscarPorCodigoCliente(cliente->getCodigo()));
+				cliente->setCuentas(archivoCuenta->buscarCuentasPorCliente(cliente->getCodigo()));
+			}
+															
+			 return cliente;		 
 		}
 		
 		
 		Cliente* buscarPorDNI(string DNI){
 		  	Cliente* cliente = NULL;
-		  	leerArchivo();
-			if(isEnableToRead){
-				while (!aleer.eof()){
-					string codigo;
-					string nombre;
-					string apellidoPaterno;
-					string apellidoMaterno;
-					string _DNI;
-					
-					getline(aleer,codigo,';');
-					getline(aleer,nombre,';');
-					getline(aleer,apellidoPaterno,';');
-					getline(aleer,apellidoMaterno,';');
-					getline(aleer,_DNI,'\n');	
-
-					if(DNI == _DNI){
-						ArchivoCuenta* archivoCuenta = new ArchivoCuenta();
-						ArchivoUsuario* archivoUsuario = new ArchivoUsuario();
-																		
-						cliente = new Cliente();
-						cliente->setCodigo(std::atoi(codigo.c_str()));
-						cliente->setNombre(nombre);
-						cliente->setApellidoPaterno(apellidoPaterno);
-						cliente->setApellidoMaterno(apellidoMaterno);
-						cliente->setDNI(DNI);
-						cliente->setUsuario(archivoUsuario->buscarPorCodigoCliente(cliente->getCodigo()));
-						cliente->setCuentas(archivoCuenta->buscarCuentasPorCliente(cliente->getCodigo()));
-												
-						return cliente;
-					}		
-					
-																															
-				}
-				aleer.close();
-			}				
-			return cliente;
+		  	vector<Cliente*> list = this->listar();
+		  	
+		  	ordenarBurbujaByDNI(list);
+		  	
+		  	for(int i=0; i < list.size();i++){			
+				cout << endl << list.at(i)->toRaw()  << endl;
+			}
+		  	
+		  	return cliente;		 
 		}
 		
 		void grabar(Cliente* c){	
@@ -177,7 +155,7 @@ class ArchivoCliente{
 		
 			
 			ofstream fescribir;
-			fescribir.open(ARCHIVO_CLIENTE.c_str(),ios::out|ios::app);
+			fescribir.open(this->getArchivo().c_str(),ios::out|ios::app);
 			fescribir << c->toRaw();
 			fescribir << endl;
 			fescribir.close();
@@ -189,7 +167,7 @@ class ArchivoCliente{
 			
 			ofstream fescribir;
 			//se reescribe todo el archivo
-			fescribir.open(ARCHIVO_CLIENTE.c_str(),ios::out|ios::ate);
+			fescribir.open(this->getArchivo().c_str(),ios::out|ios::ate);
 			
 			for(int i=0; i < listadoTotal.size();i++){			
 				if(listadoTotal.at(i)->getCodigo() == cliente->getCodigo()){

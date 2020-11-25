@@ -5,6 +5,7 @@ using namespace std;
 
 #include "MenuPrincipal.h"
 
+
 int main(int argc, char** argv) {
 
 	MenuPrincipal* menu = new MenuPrincipal();

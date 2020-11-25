@@ -3,47 +3,20 @@
 
 #include "Billete.h"
 #include <vector>
+#include "ArchivoGenerico.h"
 
-class ArchivoBillete{
-	
+class ArchivoBillete : public ArchivoGenerico {
 	private:
-		string ARCHIVO = "billetes.txt";
-		bool isEnableToRead = false;
-		ifstream aleer;
-		
-		bool existFile()
-		{
-		    return ifstream(ARCHIVO.c_str()).good();
-		}
-		
-		void leerArchivo() {
-			
-			if(this->existFile() == false){
-				ofstream fescribir;
-				fescribir.open(ARCHIVO.c_str(),ios::out|ios::app);
-				fescribir.close();
-			}
-			
-			aleer.open(ARCHIVO.c_str(),ios::in);
-			if (!aleer.is_open()){
-			 	cout << "No se puede abrir el archivo: " << ARCHIVO << endl;
-				isEnableToRead = false;
-			}
-			isEnableToRead = true;
-		}
-		
 		vector<Billete*> listar(){
 			vector<Billete*> lst;								
-			leerArchivo();
-			if(isEnableToRead){				
-				while (!aleer.eof()){
-					string cantidad;
-					string codigoCajero;
-					string valorBillete;
-					
-					getline(aleer,codigoCajero,';');
-					getline(aleer,valorBillete,';');				
-					getline(aleer,cantidad,'\n');
+			this->leerArchivo();
+			if(isEnableToRead()){				
+				while (!this->_aleer.eof()){
+					string cantidad,codigoCajero,valorBillete;
+
+					getline(this->_aleer,codigoCajero,';');
+					getline(this->_aleer,valorBillete,';');				
+					getline(this->_aleer,cantidad,'\n');
 													
 					int _codigoCajero = std::atoi(codigoCajero.c_str());	
 													
@@ -62,6 +35,9 @@ class ArchivoBillete{
 		}
 	
 	public:
+		ArchivoBillete() : ArchivoGenerico("billetes.txt"){
+			
+		}
 		
 		vector<Billete*> buscarBilletesPorCajero(int codigoCajero){
 			vector<Billete*> listadoTotal = this->listar();	
@@ -82,7 +58,7 @@ class ArchivoBillete{
 			
 			ofstream fescribir;
 			//se reescribe todo el archivo
-			fescribir.open(ARCHIVO.c_str(),ios::out|ios::ate);
+			fescribir.open(this->getArchivo().c_str(),ios::out|ios::ate);
 			
 			for(int i=0; i < listadoTotal.size();i++){			
 				if(listadoTotal.at(i)->getCodigoCajero() == billete->getCodigoCajero() &&
@@ -102,7 +78,7 @@ class ArchivoBillete{
 		
 		void grabar(Billete* b){							
 			ofstream fescribir;
-			fescribir.open(ARCHIVO.c_str(),ios::out|ios::app);
+			fescribir.open(this->getArchivo().c_str(),ios::out|ios::app);
 			fescribir << b->toRaw();
 			fescribir << endl;
 			fescribir.close();

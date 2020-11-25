@@ -11,47 +11,21 @@
 #include "ArchivoBillete.h"
 #include "Billete.h"
 
+#include "ArchivoGenerico.h"
 
-class ArchivoCajero{
+class ArchivoCajero : public ArchivoGenerico{
 	
 	private:
-		string ARCHIVO = "cajeros.txt";
-		bool isEnableToRead = false;
-		ifstream aleer;
-		
-		bool existFile()
-		{
-		    return ifstream(ARCHIVO.c_str()).good();
-		}
-		
-		void leerArchivo() {
-			
-			if(this->existFile() == false){
-				ofstream fescribir;
-				fescribir.open(ARCHIVO.c_str(),ios::out|ios::app);
-				fescribir.close();
-			}
-			
-			aleer.open(ARCHIVO.c_str(),ios::in);
-			if (!aleer.is_open()){
-			 	cout << "No se puede abrir el archivo: " << ARCHIVO << endl;
-				isEnableToRead = false;
-			}
-			isEnableToRead = true;
-		}
-		
 		vector<Cajero*> listar(){
 			vector<Cajero*> lst;								
 			leerArchivo();
-			if(isEnableToRead){				
-				while (!aleer.eof()){				
-					string _codigo;
-					string _estado;
-					string _ubicacion;
-					
-					getline(aleer,_codigo,';');
-					getline(aleer,_estado,';');
-					getline(aleer,_ubicacion,'\n');
+			if(isEnableToRead()){				
+				while (!this->_aleer.eof()){				
+					string _codigo,_estado,_ubicacion;
+
+					getline(this->_aleer,_codigo,';');
+					getline(this->_aleer,_estado,';');
+					getline(this->_aleer,_ubicacion,'\n');
 											
 					int codigo = std::atoi(_codigo.c_str());
 		
@@ -71,7 +45,9 @@ class ArchivoCajero{
 		}
 			
 	public:
-		
+		ArchivoCajero() : ArchivoGenerico("cajeros.txt") {
+			
+		}
 		vector<Cajero*> listarTodo(){
 			return this->listar();
 		}
@@ -86,7 +62,7 @@ class ArchivoCajero{
 			}		
 				
 			ofstream fescribir;
-			fescribir.open(ARCHIVO.c_str(),ios::out|ios::app);
+			fescribir.open(getArchivo().c_str(),ios::out|ios::app);
 			fescribir << c->toRaw();
 			fescribir << endl;
 			fescribir.close();
@@ -115,15 +91,15 @@ class ArchivoCajero{
 		Cajero* buscarPorCodigo(int codigoCajero){
 			Cajero* cajero = NULL;
 			leerArchivo();
-			if(isEnableToRead){				
-				while (!aleer.eof()){
+			if(isEnableToRead()){				
+				while (!this->_aleer.eof()){
 					string _codigo;
 					string _estado;
 					string _ubicacion;
 					
-					getline(aleer,_codigo,';');
-					getline(aleer,_estado,';');
-					getline(aleer,_ubicacion,'\n');
+					getline(this->_aleer,_codigo,';');
+					getline(this->_aleer,_estado,';');
+					getline(this->_aleer,_ubicacion,'\n');
 											
 					int codigo = std::atoi(_codigo.c_str());
 		
@@ -137,7 +113,7 @@ class ArchivoCajero{
 						return cajero;
 					}																													
 				}
-				aleer.close();
+				this->_aleer.close();
 			}				
 			return cajero;		  
 		}
