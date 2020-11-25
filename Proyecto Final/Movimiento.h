@@ -6,7 +6,7 @@ using namespace std;
 
 class Movimiento{
 	private:
-		int _codigo;
+		string _codigo;
 		int _codigoCuenta;
 		double _monto;
 		int _fecha_dia;
@@ -16,7 +16,8 @@ class Movimiento{
 		int _fecha_minuto;
 		int _fecha_segundo;
 	public: 
-		Movimiento();
+		//Movimiento();
+		Movimiento(int codigoCuenta,double monto);
 		string toRaw();
 };
 

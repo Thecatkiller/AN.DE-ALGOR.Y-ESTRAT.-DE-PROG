@@ -101,6 +101,23 @@ class ArchivoCliente : public ArchivoGenerico {
 			return -1;
 		}
 		
+		int busquedaBinariaByDNI(vector<Cliente*> lista, int inicio, int final, string DNI)
+		{
+			int medio;
+			if(inicio<=final)
+			{
+				medio = (inicio+final)/2;
+				
+				int comp = lista.at(medio)->getDNI().compare(DNI);
+				
+				if(comp == 0) return medio;
+				else if(comp > 0) final=medio-1;
+				else if (comp < 0) inicio = medio+1;
+				return busquedaBinariaByDNI(lista,inicio,final,DNI);
+			}
+			return -1;
+		}
+		
 	public:		
 		ArchivoCliente() : ArchivoGenerico("clientes.txt"){
 			
@@ -115,7 +132,7 @@ class ArchivoCliente : public ArchivoGenerico {
 			int idx = busquedaBinariaByCodigo(list,0,list.size()-1,codigoCliente);
 
 			if(idx >= 0){
-				cliente = new Cliente();
+				cliente = list.at(idx);
 				ArchivoUsuario* archivoUsuario = new ArchivoUsuario();
 				ArchivoCuenta* archivoCuenta = new ArchivoCuenta();
 				cliente->setUsuario(archivoUsuario->buscarPorCodigoCliente(cliente->getCodigo()));
@@ -130,35 +147,55 @@ class ArchivoCliente : public ArchivoGenerico {
 		  	Cliente* cliente = NULL;
 		  	vector<Cliente*> list = this->listar();
 		  	
-		  	ordenarBurbujaByDNI(list);
-		  	
+		  	/*cout << endl << "antes de ordenar : " << endl;	  	
 		  	for(int i=0; i < list.size();i++){			
-				cout << endl << list.at(i)->toRaw()  << endl;
+				cout << list.at(i)->toRaw() << endl;
+			}	*/
+				  	
+		  	ordenarBurbujaByDNI(list);
+			  		  	
+		  	/*cout << endl << "despues de ordenar : " << endl;		  	
+		  	for(int i=0; i < list.size();i++){			
+				cout << list.at(i)->toRaw() << endl;
+			}*/
+		  			  	
+		  	int idx = busquedaBinariaByDNI(list,0,list.size()-1,DNI);		  	
+		  	//cout << endl << "indice binario : " << idx << endl;
+		  	
+		  	if(idx >= 0){
+				cliente = list.at(idx);
+				ArchivoUsuario* archivoUsuario = new ArchivoUsuario();
+				ArchivoCuenta* archivoCuenta = new ArchivoCuenta();
+				cliente->setUsuario(archivoUsuario->buscarPorCodigoCliente(cliente->getCodigo()));
+				cliente->setCuentas(archivoCuenta->buscarCuentasPorCliente(cliente->getCodigo()));
 			}
 		  	
 		  	return cliente;		 
 		}
 		
-		void grabar(Cliente* c){	
+		bool grabar(Cliente* c){	
 		
 			Cliente* cCodigo = this->buscarPorCodigo(c->getCodigo());
 			Cliente* cDNI = this->buscarPorDNI(c->getDNI());
 		
 			if(cCodigo != NULL){
 				cout << "Ya existe un cliente registrado con ese codigo."<<endl;
-				return;
+				return false;
 			}
 			if(cDNI != NULL){
 				cout << "Ya existe un cliente registrado con ese DNI."<<endl;
-				return;
+				return false;
 			}
 		
+			_listGeneralClientes.push_back(c);
 			
 			ofstream fescribir;
 			fescribir.open(this->getArchivo().c_str(),ios::out|ios::app);
 			fescribir << c->toRaw();
 			fescribir << endl;
 			fescribir.close();
+			
+			return true;
 		}
 		
 		void actualizar(Cliente* cliente){

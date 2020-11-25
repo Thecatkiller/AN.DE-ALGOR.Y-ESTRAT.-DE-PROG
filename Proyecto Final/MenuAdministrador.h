@@ -22,19 +22,19 @@ class MenuAdministrador : public MenuGenerico{
 			ArchivoCliente* archivoC = new ArchivoCliente();					
 			Cliente *cliente = new Cliente();					
 			cliente->pedirDatos();
-			archivoC->grabar(cliente);
-								
-			//cuenta								
-			ArchivoCuenta* archivoCuenta = new ArchivoCuenta();
-			Cuenta *cuenta = new Cuenta(cliente->getCodigo());
-			//saldo inicial de la cuenta
-			cuenta->setSaldo(1000);
-			archivoCuenta->grabar(cuenta);
-						
-			//usuario
-			ArchivoUsuario* archivoUsuario = new ArchivoUsuario();
-			Usuario* usuario = new Usuario(cliente->getCodigo(),cliente->getDNI());
-			archivoUsuario->grabar(usuario);
+			if(archivoC->grabar(cliente)){												
+				//cuenta								
+				ArchivoCuenta* archivoCuenta = new ArchivoCuenta();
+				Cuenta *cuenta = new Cuenta(cliente->getCodigo());
+				//saldo inicial de la cuenta
+				cuenta->setSaldo(1000);
+				archivoCuenta->grabar(cuenta);
+							
+				//usuario
+				ArchivoUsuario* archivoUsuario = new ArchivoUsuario();
+				Usuario* usuario = new Usuario(cliente->getCodigo(),cliente->getDNI());
+				archivoUsuario->grabar(usuario);
+			}										
 		}
 	
 	protected:

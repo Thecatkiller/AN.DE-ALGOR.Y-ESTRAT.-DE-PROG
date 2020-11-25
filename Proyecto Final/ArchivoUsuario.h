@@ -77,6 +77,9 @@ class ArchivoUsuario{
 		Usuario* buscarPorCodigoCliente(int codigoCliente){
 			Usuario* usuario = NULL;
 			leerArchivo();
+			
+			//cout << endl << "Buscando usuario (codigoCliente) : " << codigoCliente << endl;
+			
 			if(isEnableToRead){				
 				while (!aleer.eof()){
 					string _codigoCliente;
@@ -89,7 +92,10 @@ class ArchivoUsuario{
 						
 					int codigoLeido = std::atoi(_codigoCliente.c_str());
 		
-					if(codigoLeido == codigoCliente){	
+					//cout << endl << "Leyendo usuario : " << codigoLeido << endl;
+		
+					if(codigoLeido == codigoCliente){
+						//cout << endl << "encontro usuario : " << codigoLeido << endl;	
 						usuario = new Usuario();
 						usuario->setCodigoCliente(codigoLeido);						
 						usuario->setEstado(_estado == "1" ? true:false);

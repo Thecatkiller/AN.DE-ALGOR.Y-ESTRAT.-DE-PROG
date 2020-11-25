@@ -139,6 +139,8 @@ class MenuCliente : public MenuGenerico{
 			cout << endl << "Ingresar clave : ";
 			cin >> clave;	
 			
+			cout << endl << c->getUsuario()->toRaw() << endl;
+			
 			if(c->getUsuario()->validarClave(clave) == false){
 				cout << endl << "La clave ingresada es incorrecta !!" << endl;
 				_clienteActual = NULL;				
@@ -181,9 +183,10 @@ class MenuCliente : public MenuGenerico{
 			cout << "------------------------------" << endl;
 			cout << "[1] Saldo" << endl;
 			cout << "[2] Retirar" << endl;
-			cout << "[3] Depositar" << endl;
-			cout << "[4] Transferir" << endl;
-			cout << "[5] Cambiar clave" << endl;
+			cout << "[3] Ver Movimientos" << endl;
+			cout << "[4] Depositar" << endl;
+			cout << "[5] Transferir" << endl;
+			cout << "[6] Cambiar clave" << endl;
 			cout << "[9] Salir" << endl;
 			cout << "Seleccione opción: ";	
 		}
@@ -191,7 +194,7 @@ class MenuCliente : public MenuGenerico{
 	public:
 		static const char OPC_SALDO			     		= '1';
 		static const char OPC_RETIRAR			   		= '2';
-		static const char OPC_CAMBIO_CLAVE			   	= '5';
+		static const char OPC_CAMBIO_CLAVE			   	= '6';
 		static const char OPC_SALIR			     		= '9';
 		
 		
@@ -219,6 +222,8 @@ class MenuCliente : public MenuGenerico{
 						}
 						case MenuCliente::OPC_RETIRAR:
 						{
+							_cajeroActual = NULL;
+							_cuentaActual = NULL;
 							elegirCajero();
 							if(_cajeroActual!=NULL){
 								elegirCuenta();

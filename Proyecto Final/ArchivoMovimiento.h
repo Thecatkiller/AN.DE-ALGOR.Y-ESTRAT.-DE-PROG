@@ -1,9 +1,14 @@
 #ifndef ARCHIVO_MOVIMIENTO_H
 #define ARCHIVO_MOVIMIENTO_H
 
-class ArchivoMovimiento{
+#include "ArchivoGenerico.h"
 
+class ArchivoMovimiento : public ArchivoGenerico{
 
+	public:
+		ArchivoMovimiento() : ArchivoGenerico("movimientos.txt"){
+			
+		}
 
 };
 
