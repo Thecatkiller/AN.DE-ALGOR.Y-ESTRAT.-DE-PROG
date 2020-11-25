@@ -6,6 +6,7 @@
 #include "ArchivoCuenta.h"
 #include "ArchivoUsuario.h"
 #include "ArchivoBillete.h"
+#include "ArchivoMovimiento.h"
 
 #include "Cajero.h"
 #include "Cliente.h"
@@ -21,6 +22,27 @@ class MenuCliente : public MenuGenerico{
 		Cajero* _cajeroActual;
 		Cuenta* _cuentaActual;
 		
+		void mostrarMovimientos(){
+			this->_cuentaActual = NULL;
+			this->elegirCuenta();
+			if(this->_cuentaActual != NULL){
+				system("cls");
+				cout << "Cuenta :" << endl;
+				cout << "---------------------------------------------" << endl ;
+				_cuentaActual->mostrarResumen();
+				cout << endl << "Movimientos:"<<endl;
+				
+				ArchivoMovimiento* archivo = new ArchivoMovimiento();
+				vector<Movimiento*> movs = archivo->listarByCodigoCuenta(this->_cuentaActual->getCodigo());
+				
+				for(int i=0; i < movs.size();i++){			
+					Movimiento* mov = movs.at(i);
+					mov->mostrarDetalle();
+				}
+				
+			}
+		}
+			
 		void retirar(){
 			system("cls");
 			cout << "Ingrese el monto a retirar : ";
@@ -66,6 +88,9 @@ class MenuCliente : public MenuGenerico{
 				}						
 				ArchivoCuenta* archivo = new ArchivoCuenta();
 				archivo->actualizar(_cuentaActual);
+				
+				ArchivoMovimiento* archivoMov = new ArchivoMovimiento();
+				archivoMov->grabar(new Movimiento(_cuentaActual->getCodigo(), -1 * monto,this->_cajeroActual->getCodigo()));		
 				cout << endl << "Operacion exitosa !!" << endl;
 			}else{
 				cout << endl << endl << "Cuenta :" << endl;
@@ -75,6 +100,7 @@ class MenuCliente : public MenuGenerico{
 		}
 		
 		void elegirCuenta(){
+			system("cls");
 			vector<Cuenta*> cuentas = _clienteActual->getCuentas();
 			
 			if(_clienteActual->getCantidadCuentas() == 1){
@@ -150,11 +176,13 @@ class MenuCliente : public MenuGenerico{
 			_clienteActual = c;					
 		}
 		
-		void mostrarSaldoCuentas(){
-			
+		void mostrarSaldoCuentas(){			
 			vector<Cuenta*> cuentas = _clienteActual->getCuentas();
+			system("cls");
+			cout << endl << "Codigo\t\tSaldo\t\t\t Estado" << endl;
+			cout << "--------------------------------------------------" << endl;
 			for(int i=0;i < cuentas.size();i++){
-				cuentas.at(i)->mostrar();
+				cuentas.at(i)->mostrarResumen();
 			}
 		}
 		
@@ -194,6 +222,8 @@ class MenuCliente : public MenuGenerico{
 	public:
 		static const char OPC_SALDO			     		= '1';
 		static const char OPC_RETIRAR			   		= '2';
+		static const char OPC_MOVIMIENTOS		   		= '3';
+		static const char OPC_DEPOSITAR			   		= '4';
 		static const char OPC_CAMBIO_CLAVE			   	= '6';
 		static const char OPC_SALIR			     		= '9';
 		
@@ -222,15 +252,23 @@ class MenuCliente : public MenuGenerico{
 						}
 						case MenuCliente::OPC_RETIRAR:
 						{
-							_cajeroActual = NULL;
-							_cuentaActual = NULL;
-							elegirCajero();
-							if(_cajeroActual!=NULL){
-								elegirCuenta();
-								if(_cuentaActual != NULL){
-									retirar();
+							this->_cajeroActual = NULL;
+							this->_cuentaActual = NULL;
+							this->elegirCajero();
+							if(this->_cajeroActual!=NULL){
+								this->elegirCuenta();
+								if(this->_cuentaActual != NULL){
+									this->retirar();
 								}								
 							}				
+							break;
+						}
+						case MenuCliente::OPC_DEPOSITAR:{
+							
+							break;
+						}
+						case MenuCliente::OPC_MOVIMIENTOS:{
+							this->mostrarMovimientos();											
 							break;
 						}
 						case MenuCliente::OPC_CAMBIO_CLAVE:

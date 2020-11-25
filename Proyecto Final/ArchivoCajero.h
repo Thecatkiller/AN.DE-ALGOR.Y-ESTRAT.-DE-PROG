@@ -16,7 +16,15 @@
 class ArchivoCajero : public ArchivoGenerico{
 	
 	private:
+		vector<Cajero*> _listGeneralCajero;	
+		bool _listaYaLeida = false;
+		
 		vector<Cajero*> listar(){
+			
+			//esto hace que no se vuelva a leer la lista si ya se ha leido antes
+			if(_listaYaLeida)
+				return _listGeneralCajero;
+			
 			vector<Cajero*> lst;								
 			leerArchivo();
 			if(isEnableToRead()){				
@@ -40,7 +48,11 @@ class ArchivoCajero : public ArchivoGenerico{
 					}
 														
 				}
-			}			
+			}		
+			
+			_listaYaLeida = true;
+			_listGeneralCajero = lst;	
+				
 			return lst;
 		}
 			

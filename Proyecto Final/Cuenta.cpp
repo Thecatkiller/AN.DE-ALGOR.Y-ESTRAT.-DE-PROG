@@ -26,9 +26,12 @@ void Cuenta::mostrar(){
 	cout << "\tSaldo : " << this->_saldo << endl << endl;
 }
 
+
 void Cuenta::mostrarResumen(){
-	cout << "Codigo : " << this->_codigo;
-	cout << "\t Saldo : S/. " << this->_saldo << endl;
+	string estado = this->_estado ? "activo" : "inactivo";
+	cout << this->_codigo;
+	cout << "\t\t S/. " << this->_saldo;
+	cout << "\t\t " << estado << endl;
 }
 
 void Cuenta::setCodigo(int codigo){

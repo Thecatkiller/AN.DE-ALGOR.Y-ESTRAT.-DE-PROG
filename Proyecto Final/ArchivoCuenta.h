@@ -12,47 +12,19 @@
 
 using namespace std;
 
-class ArchivoCuenta{
-	private:
-		string ARCHIVO = "cuentas.txt";
-		bool isEnableToRead = false;
-		ifstream aleer;
-		
-		bool existFile()
-		{
-		    return ifstream(ARCHIVO.c_str()).good();
-		}
-		
-		void leerArchivo() {
-			
-			if(this->existFile() == false){
-				ofstream fescribir;
-				fescribir.open(ARCHIVO.c_str(),ios::out|ios::app);
-				fescribir.close();
-			}
-			
-			aleer.open(ARCHIVO.c_str(),ios::in);
-			if (!aleer.is_open()){
-			 	cout << "No se puede abrir el archivo: " << ARCHIVO << endl;
-				isEnableToRead = false;
-			}
-			isEnableToRead = true;
-		}
-		
+class ArchivoCuenta : public ArchivoGenerico{
+	private:			
 		vector<Cuenta*> listar(){
 			vector<Cuenta*> lst;								
 			leerArchivo();
-			if(isEnableToRead){				
-				while (!aleer.eof()){
-					string _codigo;
-					string _codigoCliente;
-					string _estado;
-					string _saldo;
-					
-					getline(aleer,_codigo,';');
-					getline(aleer,_codigoCliente,';');
-					getline(aleer,_estado,';');
-					getline(aleer,_saldo,'\n');
+			if(isEnableToRead()){				
+				while (!this->_aleer.eof()){
+					string _codigo,_codigoCliente,_estado,_saldo;
+
+					getline(this->_aleer,_codigo,';');
+					getline(this->_aleer,_codigoCliente,';');
+					getline(this->_aleer,_estado,';');
+					getline(this->_aleer,_saldo,'\n');
 								
 					int codigo = std::atoi(_codigo.c_str());
 					
@@ -72,6 +44,9 @@ class ArchivoCuenta{
 		}
 		
 	public:
+		ArchivoCuenta() : ArchivoGenerico("cuentas.txt"){
+			
+		}
 		
 		vector<Cuenta*> buscarCuentasPorCliente(int codigoCliente){			
 			vector<Cuenta*> lst;
@@ -88,7 +63,7 @@ class ArchivoCuenta{
 		
 		void grabar(Cuenta* cuenta){
 			ofstream fescribir;
-			fescribir.open(ARCHIVO.c_str(),ios::out|ios::app);
+			fescribir.open(this->getArchivo().c_str(),ios::out|ios::app);
 			fescribir << cuenta->toRaw();
 			fescribir << endl;
 			fescribir.close();
@@ -99,7 +74,7 @@ class ArchivoCuenta{
 			vector<Cuenta*> listadoTotal = this->listar();		
 			ofstream fescribir;
 			//se reescribe todo el archivo
-			fescribir.open(ARCHIVO.c_str(),ios::out|ios::ate);
+			fescribir.open(this->getArchivo().c_str(),ios::out|ios::ate);
 			
 			for(int i=0; i < listadoTotal.size();i++){			
 				if(listadoTotal.at(i)->getCodigo() == cuenta->getCodigo()){
