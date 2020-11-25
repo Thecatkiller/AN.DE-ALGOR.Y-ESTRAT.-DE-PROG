@@ -19,7 +19,8 @@ class ArchivoMovimiento : public ArchivoGenerico{
 			this->leerArchivo();
 			if(isEnableToRead()){				
 				while (!this->_aleer.eof()){
-					string _codigo,_codigoCuenta,_monto,_fecha_dia,_fecha_mes,_fecha_anio,_fecha_hora,_fecha_minuto,_fecha_segundo,_codigoCajero;
+					string _codigo,_codigoCuenta,_monto,_fecha_dia,_fecha_mes,_fecha_anio,
+					_fecha_hora,_fecha_minuto,_fecha_segundo,_codigoCajero,_descripcion;
 					
 					getline(this->_aleer,_codigo,';');
 					getline(this->_aleer,_codigoCuenta,';');
@@ -29,7 +30,8 @@ class ArchivoMovimiento : public ArchivoGenerico{
 					getline(this->_aleer,_fecha_anio,';');
 					getline(this->_aleer,_fecha_hora,';');
 					getline(this->_aleer,_fecha_minuto,';');	
-					getline(this->_aleer,_fecha_segundo,';');			
+					getline(this->_aleer,_fecha_segundo,';');	
+					getline(this->_aleer,_descripcion,';');		
 					getline(this->_aleer,_codigoCajero,'\n');	
 								
 					int codigoCuenta = std::atoi(_codigoCuenta.c_str());
@@ -44,8 +46,9 @@ class ArchivoMovimiento : public ArchivoGenerico{
 							atoi(_fecha_anio.c_str()),
 							atoi(_fecha_hora.c_str()),
 							atoi(_fecha_minuto.c_str()),
-							atoi(_fecha_segundo.c_str()),
-							atoi(_codigoCajero.c_str())
+							atoi(_fecha_segundo.c_str()),						
+							atoi(_codigoCajero.c_str()),
+							_descripcion
 						);																							
 						lst.push_back(mov);	
 					}									
@@ -85,6 +88,43 @@ class ArchivoMovimiento : public ArchivoGenerico{
 			return -1;
 		}
 		
+		//usando busqueda binaria iterativa
+		int obtenerIndiceMenorLista(vector<Movimiento*> lista,int codigoCuenta){
+			int low = 0, high = lista.size() - 1;
+		    int startIndex = -1;
+		    while (low <= high) {
+		        int mid = (high - low) / 2 + low;
+		        int codigoBuscar = lista.at(mid)->getCodigoCuenta();
+		        if (codigoBuscar > codigoCuenta) {
+		            high = mid - 1;
+		        } else if (codigoBuscar == codigoCuenta) {
+		            startIndex = mid;
+		            high = mid - 1;
+		        } else
+		            low = mid + 1;
+		    }
+		    return startIndex;
+		}
+		
+		//usando busqueda binaria iterativa
+		int obtenerIndiceMayorLista(vector<Movimiento*> lista,int codigoCuenta){
+			int endIndex = -1;
+		    int low = 0;
+		    int high = lista.size() - 1;
+		    while (low <= high) {
+		        int mid = (high - low) / 2 + low;
+		        int codigoBuscar = lista.at(mid)->getCodigoCuenta();	        
+		        if (codigoBuscar > codigoCuenta) {
+		            high = mid - 1;
+		        } else if (codigoBuscar == codigoCuenta) {
+		            endIndex = mid;
+		            low = mid + 1;
+		        } else
+		            low = mid + 1;
+		    }
+		    return endIndex;
+		}
+		
 		
 
 	public:
@@ -97,33 +137,22 @@ class ArchivoMovimiento : public ArchivoGenerico{
 			vector<Movimiento*> list = this->listar();	
 			ordenarSeleccionByCodigoCuenta(list);
 			
-			//cout << endl;
-			//for(int i=0; i < list.size();i++){			
-				//list.at(i)->mostrarDetalle();
-			//}
+			/*cout << endl;
+			for(int i=0; i < list.size();i++){			
+				cout << list.at(i)->toRaw() << endl;
+			}*/
+						
+			int idxMenor = obtenerIndiceMenorLista(list, codigoCuenta);
+			int idxMayor = obtenerIndiceMayorLista(list, codigoCuenta);
+			//cout << endl << "idxMenor : " << idxMenor << endl;
+			//cout << endl << "idxMayor : " << idxMayor << endl;
 			
-			int last = list.size()-1;
-			int idx = busquedaBinariaByCodigoCuenta(list,0,last,codigoCuenta);
-			
-			if(idx >= 0){
-				Movimiento* movPrimero = list.at(idx);
-				movimientos.push_back(list.at(idx));
-				//si existe al menos una coincidencia
-				last = idx;
-				cout << endl;
-				cout << endl;				
-				do{
-					idx = busquedaBinariaByCodigoCuenta(list,0,last,codigoCuenta);
-					if(idx >= 0){
-						if(movPrimero->getCodigo() != list.at(idx)->getCodigo())			
-							movimientos.push_back(list.at(idx));												
-						last--;
-						if(last == 0)
-							break;
-					}
-				}while(idx >= 0 );
-			}
-																						
+			if (idxMenor != -1 && idxMayor != -1){
+		        for(int i =idxMayor ; i>=idxMenor; i--){
+		        	movimientos.push_back(list.at(i));
+				}
+    		}
+																									
 			return movimientos;		
 		}
 		

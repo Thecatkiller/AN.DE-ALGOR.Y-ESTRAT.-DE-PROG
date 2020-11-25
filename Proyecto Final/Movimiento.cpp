@@ -4,9 +4,11 @@
 #include <iostream>
 #include <stdio.h>
 #include <sstream>
+#include <iomanip>
+
 using namespace std;
 
-Movimiento::Movimiento(int codigoCuenta,double monto, int codigoCajero){
+Movimiento::Movimiento(int codigoCuenta,double monto, int codigoCajero,string descripcion){
 	//obtiene la hora del sistema
 	time_t t = time(0); 
 	tm* now = localtime(&t);
@@ -34,10 +36,11 @@ Movimiento::Movimiento(int codigoCuenta,double monto, int codigoCajero){
 	
 	this->_codigo = data.str();
 	this->_codigoCajero = codigoCajero;
-	
+	this->_descripcion = descripcion;
 }
 
-Movimiento::Movimiento(string codigo,int codigoCuenta,double monto,int dia,int mes,int anio,int hora,int minuto,int segundo,int codigoCajero){
+Movimiento::Movimiento(string codigo,int codigoCuenta,double monto,int dia,int mes,int anio,int hora,int minuto,
+int segundo,int codigoCajero,string descripcion){
 	this->_codigo = codigo;
 	this->_codigoCuenta = codigoCuenta;
 	this->_monto = monto;
@@ -48,22 +51,34 @@ Movimiento::Movimiento(string codigo,int codigoCuenta,double monto,int dia,int m
 	this->_fecha_minuto = minuto;
 	this->_fecha_segundo = segundo;
 	this->_codigoCajero = codigoCajero;
+	this->_descripcion = descripcion;
 }
 
 int Movimiento::getCodigoCuenta(){
 	return this->_codigoCuenta;
 }
 
-void Movimiento::mostrarDetalle(){	
+void Movimiento::mostrarDetalle(string saldo){	
 	char fecha[30];
-	sprintf(fecha, "%02d:%02d:%02d %02d/%02d/%04d",_fecha_hora,_fecha_minuto,_fecha_segundo, _fecha_dia, _fecha_mes, _fecha_anio);
-	cout << "\t S/. " <<  this->_monto << "\t\t";
+	//sprintf(fecha, "%02d:%02d:%02d %02d/%02d/%04d",_fecha_hora,_fecha_minuto,_fecha_segundo, _fecha_dia, _fecha_mes, _fecha_anio);
+	sprintf(fecha, "%02d/%02d/%04d\t%02d:%02d:%02d",_fecha_dia, _fecha_mes, _fecha_anio,_fecha_hora,_fecha_minuto,_fecha_segundo);
+	cout << fecha << "\t";
+	cout.width(35); std::cout << std::left << this->_descripcion;	 
+	cout << "S/. " <<  this->_monto << "\t";
+	if(saldo.length() > 0){
+		cout << "\t" << saldo;
+	}
+
 	//cout << fecha << "\t" << this->_codigoCuenta <<  endl;
-	cout << fecha << endl;
+	cout << endl;
 }
 string Movimiento::getCodigo(){
 	return this->_codigo;
 }
+double Movimiento::getMonto(){
+	return this->_monto;
+}
+
 string Movimiento::toRaw(){
 	ostringstream data; 
 	data << this->_codigo << ";";
@@ -75,6 +90,7 @@ string Movimiento::toRaw(){
 	data << this->_fecha_hora << ";";
 	data << this->_fecha_minuto << ";";
 	data << this->_fecha_segundo << ";";
+	data << this->_descripcion << ";";
 	data << this->_codigoCajero;
 	return data.str();		
 }

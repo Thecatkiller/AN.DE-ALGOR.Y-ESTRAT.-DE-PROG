@@ -68,6 +68,9 @@ bool Cuenta::retirar(double monto){
 	return true;
 }
 
+double Cuenta::getSaldo(){
+	return this->_saldo;
+}
 
 
 string Cuenta::toRaw(){

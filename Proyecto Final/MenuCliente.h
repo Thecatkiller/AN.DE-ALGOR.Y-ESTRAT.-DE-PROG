@@ -14,7 +14,10 @@
 #include "Cuenta.h"
 #include "Cajero.h"
 
+#include <iostream>
+#include <string>
 #include <vector>
+#include <sstream>
 
 class MenuCliente : public MenuGenerico{
 	private:
@@ -27,20 +30,39 @@ class MenuCliente : public MenuGenerico{
 			this->elegirCuenta();
 			if(this->_cuentaActual != NULL){
 				system("cls");
-				cout << "Cuenta :" << endl;
-				cout << "---------------------------------------------" << endl ;
+				cout << "Mi cuenta:" << endl;
+				cout << "----------------------------------------------------" << endl << endl;
 				_cuentaActual->mostrarResumen();
-				cout << endl << "Movimientos:"<<endl;
-				
+				cout << endl << "Mis Movimientos:"<<endl<<endl;
+				cout << "Fecha"; cout.width(15);
+				cout << "Hora"; cout.width(23);
+				cout << "Descripción"; cout.width(31);
+				cout << "Importe"; cout.width(18);
+				cout << "Saldo" << endl;
+				cout << "-------------------------------------------------------------------------------------------------------" << endl;
 				ArchivoMovimiento* archivo = new ArchivoMovimiento();
 				vector<Movimiento*> movs = archivo->listarByCodigoCuenta(this->_cuentaActual->getCodigo());
 				
+				double saldoCalculado = this->_cuentaActual->getSaldo();
+				
 				for(int i=0; i < movs.size();i++){			
 					Movimiento* mov = movs.at(i);
-					mov->mostrarDetalle();
+					
+					std::ostringstream saldo;
+					saldo << "S/. " << saldoCalculado;
+					mov->mostrarDetalle(saldo.str());
+					
+					saldoCalculado+= -1 * mov->getMonto();
 				}
 				
 			}
+		}
+		
+		void depositar(){
+			system("cls");
+			
+			cout << "Aca deberias depositar :v" << endl;
+			
 		}
 			
 		void retirar(){
@@ -88,9 +110,17 @@ class MenuCliente : public MenuGenerico{
 				}						
 				ArchivoCuenta* archivo = new ArchivoCuenta();
 				archivo->actualizar(_cuentaActual);
-				
 				ArchivoMovimiento* archivoMov = new ArchivoMovimiento();
-				archivoMov->grabar(new Movimiento(_cuentaActual->getCodigo(), -1 * monto,this->_cajeroActual->getCodigo()));		
+				
+				string descripcion = "RETIRO EFECTIVO-" + this->_cajeroActual->getUbicacionCorta();
+				
+				Movimiento* mov = new Movimiento(
+					_cuentaActual->getCodigo(),
+					-1 * monto,this->_cajeroActual->getCodigo(),
+					descripcion
+				);
+				 
+				archivoMov->grabar(mov);		
 				cout << endl << "Operacion exitosa !!" << endl;
 			}else{
 				cout << endl << endl << "Cuenta :" << endl;
@@ -264,7 +294,15 @@ class MenuCliente : public MenuGenerico{
 							break;
 						}
 						case MenuCliente::OPC_DEPOSITAR:{
-							
+							this->_cajeroActual = NULL;
+							this->_cuentaActual = NULL;
+							this->elegirCajero();		
+							if(this->_cajeroActual!=NULL){
+								this->elegirCuenta();
+								if(this->_cuentaActual != NULL){
+									this->depositar();
+								}																
+							}
 							break;
 						}
 						case MenuCliente::OPC_MOVIMIENTOS:{

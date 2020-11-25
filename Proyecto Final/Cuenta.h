@@ -23,6 +23,7 @@ class Cuenta{
 		string toRaw();
 		int getCodigoCliente();
 		bool retirar(double monto);
+		double getSaldo();
 		int getCodigo();
 };
 

@@ -16,14 +16,16 @@ class Movimiento{
 		int _fecha_minuto;
 		int _fecha_segundo;
 		int _codigoCajero;
+		string _descripcion;
 	public: 
 		//Movimiento();
-		Movimiento(int codigoCuenta,double monto,int codigoCajero);
-		Movimiento(string codigo,int codigoCuenta,double monto,int dia,int mes,int anio,int hora,int minuto,int segundo,int codigoCajero);
+		Movimiento(int codigoCuenta,double monto,int codigoCajero,string _descripcion);
+		Movimiento(string codigo,int codigoCuenta,double monto,int dia,int mes,int anio,int hora,int minuto,int segundo,int codigoCajero,string descripcion);
 		string toRaw();
 		int getCodigoCuenta();
-		void mostrarDetalle();
+		void mostrarDetalle(string saldo);
 		string getCodigo();
+		double getMonto();
 		
 };
 

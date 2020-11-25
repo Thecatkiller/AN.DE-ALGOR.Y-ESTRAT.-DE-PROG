@@ -50,6 +50,22 @@ double Cajero::getMontoTotal(){
 	return monto;
 }
 
+string Cajero::getUbicacion(){
+	return this->_ubicacion;
+}
+
+string Cajero::getUbicacionCorta(){
+	
+	int len = this->_ubicacion.length();
+	
+	if(len > 10){
+		return this->_ubicacion.substr(0,10);  
+	}
+	
+	return this->_ubicacion;
+}
+
+
 Billete* Cajero::getBilletesPorDenominacion(ValorBillete valorBillete){
 	Billete* billete= NULL;
 	for(int i=0; i < this->_billetes.size();i++){			

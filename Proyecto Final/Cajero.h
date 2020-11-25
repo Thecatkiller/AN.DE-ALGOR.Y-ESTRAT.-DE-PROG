@@ -24,6 +24,8 @@ class Cajero{
 		void setBilletes(vector<Billete*> billetes);
 		vector<Billete*> getBilletes();
 		double getMontoTotal();
+		string getUbicacion();
+		string getUbicacionCorta();
 		Billete* getBilletesPorDenominacion(ValorBillete valorBillete);
 };
 
