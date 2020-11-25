@@ -53,6 +53,7 @@ class ArchivoMovimiento : public ArchivoGenerico{
 						lst.push_back(mov);	
 					}									
 				}
+				this->_aleer.close();
 			}
 			_listaYaLeida = true;
 			_listGeneralMovimientos = lst;			

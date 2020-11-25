@@ -53,6 +53,7 @@ class ArchivoCliente : public ArchivoGenerico {
 						lst.push_back(cliente);	
 					}									
 				}
+				this->_aleer.close();
 			}
 			_listaYaLeida = true;
 			_listGeneralClientes = lst;			

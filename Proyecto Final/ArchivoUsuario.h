@@ -9,47 +9,22 @@
 #include <conio.h>
 #include <cstdlib>
 
+#include "ArchivoGenerico.h"
+
 using namespace std;
 
-class ArchivoUsuario{
-	private:
-		string ARCHIVO = "usuarios.txt";
-		bool isEnableToRead = false;
-		ifstream aleer;
-		
-		bool existFile()
-		{
-		    return ifstream(ARCHIVO.c_str()).good();
-		}
-		
-		void leerArchivo() {
-			
-			if(this->existFile() == false){
-				ofstream fescribir;
-				fescribir.open(ARCHIVO.c_str(),ios::out|ios::app);
-				fescribir.close();
-			}
-			
-			aleer.open(ARCHIVO.c_str(),ios::in);
-			if (!aleer.is_open()){
-			 	cout << "No se puede abrir el archivo: " << ARCHIVO << endl;
-				isEnableToRead = false;
-			}
-			isEnableToRead = true;
-		}
-		
+class ArchivoUsuario : ArchivoGenerico{
+	private:		
 		vector<Usuario*> listar(){
 			vector<Usuario*> lst;								
-			leerArchivo();
-			if(isEnableToRead){				
-				while (!aleer.eof()){
-					string _codigoCliente;
-					string _clave;
-					string _estado;
-															
-					getline(aleer,_codigoCliente,';');
-					getline(aleer,_clave,';');
-					getline(aleer,_estado,'\n');
+			this->leerArchivo();
+			if(this->isEnableToRead()){				
+				while (!this->_aleer.eof()){
+					string _codigoCliente,_clave,_estado;
+												
+					getline(this->_aleer,_codigoCliente,';');
+					getline(this->_aleer,_clave,';');
+					getline(this->_aleer,_estado,'\n');
 								
 					int codigoLeido = std::atoi(_codigoCliente.c_str());
 					
@@ -61,14 +36,19 @@ class ArchivoUsuario{
 						lst.push_back(usuario);	
 					}									
 				}
+				this->_aleer.close();
 			}			
 			return lst;
 		}
 		
-	public:								
+	public:	
+		ArchivoUsuario() : ArchivoGenerico("usuarios.txt"){
+			
+		}
+								
 		void grabar(Usuario* obj){				
 			ofstream fescribir;
-			fescribir.open(ARCHIVO.c_str(),ios::out|ios::app);
+			fescribir.open(this->getArchivo().c_str(),ios::out|ios::app);
 			fescribir << obj->toRaw();
 			fescribir << endl;
 			fescribir.close();
@@ -80,15 +60,13 @@ class ArchivoUsuario{
 			
 			//cout << endl << "Buscando usuario (codigoCliente) : " << codigoCliente << endl;
 			
-			if(isEnableToRead){				
-				while (!aleer.eof()){
-					string _codigoCliente;
-					string _clave;
-					string _estado;
+			if(this->isEnableToRead()){				
+				while (!this->_aleer.eof()){
+					string _codigoCliente,_clave,_estado;
 															
-					getline(aleer,_codigoCliente,';');
-					getline(aleer,_clave,';');
-					getline(aleer,_estado,'\n');
+					getline(this->_aleer,_codigoCliente,';');
+					getline(this->_aleer,_clave,';');
+					getline(this->_aleer,_estado,'\n');
 						
 					int codigoLeido = std::atoi(_codigoCliente.c_str());
 		
@@ -103,7 +81,7 @@ class ArchivoUsuario{
 						return usuario;
 					}																													
 				}
-				aleer.close();
+				this->_aleer.close();
 			}				
 			return usuario;		  
 		}
@@ -115,7 +93,7 @@ class ArchivoUsuario{
 			
 			ofstream fescribir;
 			//se reescribe todo el archivo
-			fescribir.open(ARCHIVO.c_str(),ios::out|ios::ate);
+			fescribir.open(this->getArchivo().c_str(),ios::out|ios::ate);
 			
 			for(int i=0; i < listadoTotal.size();i++){			
 				if(listadoTotal.at(i)->getCodigoCliente() == usuario->getCodigoCliente()){

@@ -158,8 +158,17 @@ class MenuCliente : public MenuGenerico{
 		
 		void elegirCajero(){
 			system("cls");
-			ArchivoCajero* archivo = new ArchivoCajero();
-			cout << "Ingrese el codigo del cajero (numero): ";
+			ArchivoCajero* archivo = new ArchivoCajero();			
+			vector<Cajero*> cajeros = archivo->listarTodo();
+			cout << endl;
+			for(int i = 0 ; i < cajeros.size(); i++){
+				Cajero* caj = cajeros.at(i);
+				cout << "[" << caj->getCodigo() << "] - " << caj->getUbicacion() << endl;
+			}
+			
+			fflush(stdin);
+						
+			cout << endl << "Ingrese el codigo del cajero (numero): ";
 			int codigoCajero;
 			cin >> codigoCajero;
 			cout << endl;

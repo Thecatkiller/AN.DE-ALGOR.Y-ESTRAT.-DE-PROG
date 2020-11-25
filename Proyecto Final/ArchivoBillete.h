@@ -30,6 +30,7 @@ class ArchivoBillete : public ArchivoGenerico {
 						lst.push_back(billete);	
 					}									
 				}
+				this->_aleer.close();
 			}			
 			return lst;
 		}

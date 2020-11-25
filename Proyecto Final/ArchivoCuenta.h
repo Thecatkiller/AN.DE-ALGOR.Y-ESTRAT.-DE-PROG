@@ -39,6 +39,7 @@ class ArchivoCuenta : public ArchivoGenerico{
 						lst.push_back(cuenta);	
 					}									
 				}
+				this->_aleer.close();
 			}			
 			return lst;
 		}

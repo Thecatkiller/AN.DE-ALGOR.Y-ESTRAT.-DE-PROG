@@ -48,6 +48,7 @@ class ArchivoCajero : public ArchivoGenerico{
 					}
 														
 				}
+				this->_aleer.close();
 			}		
 			
 			_listaYaLeida = true;
@@ -102,6 +103,9 @@ class ArchivoCajero : public ArchivoGenerico{
 		
 		Cajero* buscarPorCodigo(int codigoCajero){
 			Cajero* cajero = NULL;
+			
+			
+			
 			leerArchivo();
 			if(isEnableToRead()){				
 				while (!this->_aleer.eof()){
