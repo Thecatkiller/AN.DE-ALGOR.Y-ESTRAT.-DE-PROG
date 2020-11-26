@@ -28,13 +28,16 @@ class ArchivoCuenta : public ArchivoGenerico{
 								
 					int codigo = std::atoi(_codigo.c_str());
 					
+					double saldo;					
+					istringstream(_saldo) >> saldo;   
+					
 					if(codigo > 0){											
 						int codigoCliente = std::atoi(_codigoCliente.c_str());						
 						Cuenta* cuenta = new Cuenta();
 						cuenta->setCodigo(codigo);
 						cuenta->setCodigoCliente(codigoCliente);					
 						cuenta->setEstado(_estado == "1" ? true:false);
-						cuenta->setSaldo(atof(_saldo.c_str()));
+						cuenta->setSaldo(saldo);
 														
 						lst.push_back(cuenta);	
 					}									

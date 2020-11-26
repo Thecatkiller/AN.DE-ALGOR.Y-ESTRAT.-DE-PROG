@@ -91,6 +91,20 @@ string Movimiento::getCodigoCuentaConCeros(){
 	return data.str();
 }
 
+unsigned long long Movimiento::getSegundosTotales(){
+	unsigned long long s = this->_fecha_segundo;
+	
+	s += this->_fecha_minuto * 60;
+	s += this->_fecha_hora * 60 * 60;
+	s += this->_fecha_dia * 60 * 60 * 24;
+	s += this->_fecha_mes * 60 * 60 * 24 * 30;
+	s += (this->_fecha_anio - 1900) * 60 * 60 * 24 * 30 * 12;
+	
+	//cout << endl << "segundos : " << s << endl;
+	
+	return s;
+}
+
 string Movimiento::toRaw(){
 	ostringstream data; 
 	data << this->_codigo << ";";

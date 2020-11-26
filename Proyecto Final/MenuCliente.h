@@ -163,7 +163,7 @@ class MenuCliente : public MenuGenerico{
 			vector<Cuenta*> cuentas = _clienteActual->getCuentas();
 			system("cls");
 			cout << endl << "Codigo\t\tSaldo\t\t\t Estado" << endl;
-			cout << "--------------------------------------------------" << endl;
+			cout << "---------------------------------------------------------" << endl;
 			for(int i=0;i < cuentas.size();i++){
 				cuentas.at(i)->mostrarResumen();
 			}

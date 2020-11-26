@@ -27,6 +27,7 @@ class Movimiento{
 		void mostrarDetalle(string saldo);
 		string getCodigo();
 		double getMonto();
+		unsigned long long getSegundosTotales();
 		int getCodigoCajero();
 };
 

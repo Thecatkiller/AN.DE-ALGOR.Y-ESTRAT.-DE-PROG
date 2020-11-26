@@ -101,7 +101,8 @@ class ArchivoMovimiento : public ArchivoGenerico{
 			for (int j = 0; j < vecsize - 1; ++j) {			
 			    int min = j;
 			    for (int i = j+1; i < vecsize; ++i) {
-			        if (lista.at(min)->getCodigo().compare(lista.at(i)->getCodigo()) < 0) {
+			    	//lista.at(min)->getSegundosTotales();
+			        if (lista.at(min)->getSegundosTotales() < lista.at(i)->getSegundosTotales()) {
 			            min = i;
 			        }			
 			    }  
