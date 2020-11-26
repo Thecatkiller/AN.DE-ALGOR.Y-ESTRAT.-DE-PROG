@@ -29,7 +29,7 @@ void Cuenta::mostrar(){
 
 void Cuenta::mostrarResumen(){
 	string estado = this->_estado ? "activo" : "inactivo";
-	cout << this->_codigo;
+	cout << this->getCodigoConCeros();
 	cout << "\t\t S/. " << this->_saldo;
 	cout << "\t\t " << estado << endl;
 }

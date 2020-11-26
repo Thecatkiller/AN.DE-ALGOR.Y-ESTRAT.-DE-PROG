@@ -2,12 +2,32 @@
 #define MENU_TRANSFERIR_H
 
 #include "MenuCuenta.h"
+#include <iomanip>
+#include <cmath>
 
 class MenuTransferir : public MenuGenerico {
 	
 	private:
 		Cuenta* _cuentaOrigen;
 		Cliente* _clienteActual;
+		
+		void aCuentaTercero(){
+			fflush(stdin);
+			system("cls");	
+			
+			MenuCuenta* menuCuenta = new MenuCuenta(this->_clienteActual);
+			Cuenta *cuentaDestino = menuCuenta->elegirCuentaTercero("Elegir cuenta destino");
+			if(cuentaDestino != NULL){
+				double monto = this->ingresoMonto();			
+				if(monto > 0)
+				{
+					if(validarSaldoCuentaOrigen(monto,false)){
+						this->grabarTrxCuentaOrigen(monto,cuentaDestino,false);
+						this->grabarTrxCuentaDestino(monto,cuentaDestino);
+					}
+				}
+			}
+		}
 		
 		void aCuentaPropia(){
 			fflush(stdin);
@@ -25,8 +45,8 @@ class MenuTransferir : public MenuGenerico {
 				double monto = this->ingresoMonto();			
 				if(monto > 0)
 				{
-					if(validarSaldoCuentaOrigen(monto)){
-						this->grabarTrxCuentaOrigen(monto,cuentaDestino);
+					if(validarSaldoCuentaOrigen(monto,true)){
+						this->grabarTrxCuentaOrigen(monto,cuentaDestino,true);
 						this->grabarTrxCuentaDestino(monto,cuentaDestino);
 					}
 				}
@@ -45,12 +65,14 @@ class MenuTransferir : public MenuGenerico {
 										//TODO ver como manejarlo luego
 										descripcion
 										);
+													
+										
 			archivoMovimiento->grabar(mov);	
 			cuentaDestino->setSaldo(cuentaDestino->getSaldo() + monto);	
 			archivoCuenta->actualizar(cuentaDestino);
 		}
 		
-		void grabarTrxCuentaOrigen(double monto,Cuenta* cuentaDestino){
+		void grabarTrxCuentaOrigen(double monto,Cuenta* cuentaDestino,bool cuentaDestinoPropia){
 			ArchivoCuenta* archivoCuenta = new ArchivoCuenta();
 			ArchivoMovimiento* archivoMovimiento = new ArchivoMovimiento();
 				
@@ -63,16 +85,38 @@ class MenuTransferir : public MenuGenerico {
 										//TODO ver como manejarlo luego
 										descripcion
 										);
-										
-			archivoMovimiento->grabar(mov);				
-			this->_cuentaOrigen->setSaldo(this->_cuentaOrigen->getSaldo() - monto);
-									
+			archivoMovimiento->grabar(mov);	
+			
+			double montoFinal = this->_cuentaOrigen->getSaldo() - monto;
+			
+			if(cuentaDestinoPropia == false && monto >= 1000){	
+				double itf = calcularITF(monto);
+				montoFinal -= itf;
+				descripcion = "IMPUESTO ITF " + cuentaDestino->getCodigoConCeros();
+				Movimiento* movITF = new Movimiento(
+										this->_cuentaOrigen->getCodigo(),
+										-1 * itf,
+										-1,//se pone como codigo de cajero uno que no existe
+										//TODO ver como manejarlo luego
+										descripcion
+										);
+				archivoMovimiento->grabar(movITF);	
+			}
+																
+			this->_cuentaOrigen->setSaldo(montoFinal);								
 			//actualiza el saldo de la cuenta origen
 			archivoCuenta->actualizar(this->_cuentaOrigen);
 		}
 		
-		bool validarSaldoCuentaOrigen(double monto){
-			double montoRestante = _cuentaOrigen->getSaldo() - monto;
+		double calcularITF(double monto){		
+			return round(monto * 0.00005);			
+		}
+		
+		bool validarSaldoCuentaOrigen(double monto,bool cuentaDestinoPropia){
+			double montoRestante = _cuentaOrigen->getSaldo() - monto;			
+			if(cuentaDestinoPropia == false && monto >= 1000){				
+				montoRestante -= calcularITF(monto);
+			}			
 			if(montoRestante < 0){
 				cout << endl << "La cuenta origen no tiene los fondos para la transferencia !!!" << endl;
 				return false;
@@ -121,6 +165,9 @@ class MenuTransferir : public MenuGenerico {
 			
 			if(opc == '1'){
 				this->aCuentaPropia();
+			}
+			else if(opc == '2'){
+				this->aCuentaTercero();
 			}
 						
 		}

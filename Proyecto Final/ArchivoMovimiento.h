@@ -3,6 +3,11 @@
 
 #include "ArchivoGenerico.h"
 #include "Movimiento.h"
+#include <stdio.h>
+#include <cstdlib>
+#include <iostream>
+#include "iomanip"
+#include "sstream"
 
 class ArchivoMovimiento : public ArchivoGenerico{
 
@@ -33,14 +38,16 @@ class ArchivoMovimiento : public ArchivoGenerico{
 					getline(this->_aleer,_fecha_segundo,';');	
 					getline(this->_aleer,_descripcion,';');		
 					getline(this->_aleer,_codigoCajero,'\n');	
+					
+					double monto;					
+					istringstream(_monto) >> monto;   
 								
-					int codigoCuenta = std::atoi(_codigoCuenta.c_str());
-										
+					int codigoCuenta = std::atoi(_codigoCuenta.c_str());			
 					if(codigoCuenta > 0){											
 						Movimiento* mov = new Movimiento(
 							_codigo,
 							codigoCuenta,
-							atof(_monto.c_str()),
+							monto,
 							atoi(_fecha_dia.c_str()),
 							atoi(_fecha_mes.c_str()),
 							atoi(_fecha_anio.c_str()),

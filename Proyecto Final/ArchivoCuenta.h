@@ -70,6 +70,10 @@ class ArchivoCuenta : public ArchivoGenerico{
 			fescribir.close();
 		}
 		
+		vector<Cuenta*> listarTodo(){
+			return this->listar();
+		}
+		
 		void actualizar(Cuenta* cuenta){
 			//se lee todo
 			vector<Cuenta*> listadoTotal = this->listar();		

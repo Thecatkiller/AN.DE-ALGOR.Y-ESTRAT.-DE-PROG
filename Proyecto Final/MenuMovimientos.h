@@ -27,9 +27,9 @@ class MenuMovimientos{
 				double saldoCalculado = this->_cuentaActual->getSaldo();
 				
 				for(int i=0; i < movs.size();i++){			
-					Movimiento* mov = movs.at(i);
-					
+					Movimiento* mov = movs.at(i);									
 					std::ostringstream saldo;
+					saldo << fixed << setprecision(2);
 					saldo << "S/. " << saldoCalculado;
 					mov->mostrarDetalle(saldo.str());
 					
