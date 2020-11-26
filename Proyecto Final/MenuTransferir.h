@@ -24,6 +24,7 @@ class MenuTransferir : public MenuGenerico {
 					if(validarSaldoCuentaOrigen(monto,false)){
 						this->grabarTrxCuentaOrigen(monto,cuentaDestino,false);
 						this->grabarTrxCuentaDestino(monto,cuentaDestino);
+						cout << endl << "Se realizó la transferencia !!!" << endl;
 					}
 				}
 			}
@@ -48,6 +49,8 @@ class MenuTransferir : public MenuGenerico {
 					if(validarSaldoCuentaOrigen(monto,true)){
 						this->grabarTrxCuentaOrigen(monto,cuentaDestino,true);
 						this->grabarTrxCuentaDestino(monto,cuentaDestino);
+						
+						cout << endl << "Se realizó la transferencia !!!" << endl;
 					}
 				}
 			}						
@@ -108,8 +111,11 @@ class MenuTransferir : public MenuGenerico {
 			archivoCuenta->actualizar(this->_cuentaOrigen);
 		}
 		
-		double calcularITF(double monto){		
-			return round(monto * 0.00005);			
+		double calcularITF(double monto){	
+			double itf = round(monto * 0.005) / 100;				
+			//cout << "itf:" << itf << endl;	
+			//system("pause");
+			return 	itf;	
 		}
 		
 		bool validarSaldoCuentaOrigen(double monto,bool cuentaDestinoPropia){

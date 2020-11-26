@@ -80,6 +80,20 @@ class ArchivoMovimiento : public ArchivoGenerico{
 			        swap(lista.at(j), lista.at(min));
 			}
 		}
+				
+		void ordenarSeleccionByFecha(vector<Movimiento*> &lista){
+			int vecsize = lista.size();
+			for (int j = 0; j < vecsize - 1; ++j) {			
+			    int min = j;
+			    for (int i = j+1; i < vecsize; ++i) {
+			        if (lista.at(min)->getCodigo().compare(lista.at(i)->getCodigo()) < 0) {
+			            min = i;
+			        }			
+			    }  
+			    if (min != j)
+			        swap(lista.at(j), lista.at(min));
+			}
+		}
 		
 		int busquedaBinariaByCodigoCuenta(vector<Movimiento*> lista, int inicio, int final, int codigo)
 		{
@@ -160,6 +174,8 @@ class ArchivoMovimiento : public ArchivoGenerico{
 		        	movimientos.push_back(list.at(i));
 				}
     		}
+			
+			ordenarSeleccionByFecha(movimientos);
 																									
 			return movimientos;		
 		}

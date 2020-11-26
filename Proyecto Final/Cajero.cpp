@@ -80,13 +80,22 @@ Billete* Cajero::getBilletesPorDenominacion(ValorBillete valorBillete){
 
 void Cajero::mostrar()
 {
-	cout << endl << endl << "Cajero : " << endl;
+	cout << endl << "Cajero : " << endl;
 	cout << "-----------------------------------" << endl;
 	cout << "\tCodigo : " << this->_codigo << endl;
 	string estado = (this->_estado == true ? "activo" : "inactivo");
 	cout << "\tEstado : " << estado << endl;
 	cout << "\tUbicacion : " << this->_ubicacion << endl;
 	cout << "\tMonto Total : " << this->getMontoTotal() << endl << endl;
+	
+	int billete[] = { 200 , 100 , 50 , 20 , 10 };		
+	int tam = sizeof(billete) / sizeof(*billete);
+	
+	for(int i = 0; i < tam; i++){
+		Billete* b = this->getBilletesPorDenominacion((ValorBillete) billete[i]);
+		cout << "\t" <<billete[i] << " x " << b->getCantidad() << " : " << b->getMonto() << endl;
+	}
+	
 }
 string Cajero::toRaw(){	
 	ostringstream temp; 
