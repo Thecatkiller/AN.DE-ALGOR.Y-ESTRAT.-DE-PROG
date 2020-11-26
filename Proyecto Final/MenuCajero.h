@@ -6,6 +6,7 @@
 #include "ArchivoCajero.h"
 #include "ArchivoBillete.h"
 #include <vector>
+#include "ArchivoMovimiento.h"
 
 using namespace std;
 
@@ -45,6 +46,7 @@ class MenuCajero : public MenuGenerico{
 			cout << "[" << OPC_REGISTRAR_CAJERO <<"] Registrar Cajero       " << endl;
 			cout << "[" << OPC_AGREGAR_BILLETES <<"] Agregar billetes       " << endl;
 			cout << "[" << OPC_LISTAR_CAJERO <<"] Listar Cajeros       " << endl;
+			cout << "[" << OPC_DETALLE_CAJERO <<"] Detalle Cajero       " << endl;
 			cout << "[9] Salir                  " << endl;
 			cout << "Seleccione opción: ";	
 		}
@@ -52,6 +54,7 @@ class MenuCajero : public MenuGenerico{
 		static const char OPC_REGISTRAR_CAJERO  		= '1';
 		static const char OPC_AGREGAR_BILLETES  		= '2';
 		static const char OPC_LISTAR_CAJERO  			= '3';
+		static const char OPC_DETALLE_CAJERO  			= '4';
 		static const char OPC_SALIR			     		= '9';
 		
 		MenuCajero(){
@@ -162,7 +165,27 @@ class MenuCajero : public MenuGenerico{
 							cajero->mostrar();
 						}
 						break;
-					}				
+					}	
+					case MenuCajero::OPC_DETALLE_CAJERO:{						
+						Cajero* cajero = this->elegirCajero();
+						if(cajero != NULL){
+							system("cls");
+							cajero->mostrar();
+							cout << endl << "Movimientos" << endl;
+							cout << "-------------------------------------------------------------------------------------------" << endl;
+							
+							ArchivoMovimiento* archivoMov = new ArchivoMovimiento();
+							vector<Movimiento*> movsCajero = archivoMov->listarByCodigoCajero(cajero->getCodigo());
+							
+							for(int i=0;i<movsCajero.size();i++){
+								Movimiento* mov = movsCajero.at(i);	
+								cout << mov->getCodigoCuentaConCeros() << "\t";
+								mov->mostrarDetalle("");
+							}
+							
+						}
+						break;
+					}
 				}
 																		
 				if(opc != this->OPC_SALIR){

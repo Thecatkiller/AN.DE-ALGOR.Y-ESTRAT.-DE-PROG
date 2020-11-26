@@ -80,7 +80,22 @@ class ArchivoMovimiento : public ArchivoGenerico{
 			        swap(lista.at(j), lista.at(min));
 			}
 		}
-				
+		
+		void ordenarSeleccionByCodigoCajero(vector<Movimiento*> &lista){
+			int vecsize = lista.size();
+			for (int j = 0; j < vecsize - 1; ++j) {			
+			    int min = j;
+			    for (int i = j+1; i < vecsize; ++i) {
+			        if (lista.at(min)->getCodigoCajero() > lista.at(i)->getCodigoCajero()) {
+			            min = i;
+			        }			
+			    }  
+			    if (min != j)
+			        swap(lista.at(j), lista.at(min));
+			}
+		}
+		
+		//TODO arreglar esto ya que solo funciona cuando es la misma cuenta		
 		void ordenarSeleccionByFecha(vector<Movimiento*> &lista){
 			int vecsize = lista.size();
 			for (int j = 0; j < vecsize - 1; ++j) {			
@@ -111,7 +126,7 @@ class ArchivoMovimiento : public ArchivoGenerico{
 		}
 		
 		//usando busqueda binaria iterativa
-		int obtenerIndiceMenorLista(vector<Movimiento*> lista,int codigoCuenta){
+		int obtenerIndiceMenorListaByCodigoCuenta(vector<Movimiento*> lista,int codigoCuenta){
 			int low = 0, high = lista.size() - 1;
 		    int startIndex = -1;
 		    while (low <= high) {
@@ -129,7 +144,7 @@ class ArchivoMovimiento : public ArchivoGenerico{
 		}
 		
 		//usando busqueda binaria iterativa
-		int obtenerIndiceMayorLista(vector<Movimiento*> lista,int codigoCuenta){
+		int obtenerIndiceMayorListaByCodigoCuenta(vector<Movimiento*> lista,int codigoCuenta){
 			int endIndex = -1;
 		    int low = 0;
 		    int high = lista.size() - 1;
@@ -147,6 +162,42 @@ class ArchivoMovimiento : public ArchivoGenerico{
 		    return endIndex;
 		}
 		
+		//usando busqueda binaria iterativa
+		int obtenerIndiceMenorListaByCodigoCajero(vector<Movimiento*> lista,int codigoCajero){
+			int low = 0, high = lista.size() - 1;
+		    int startIndex = -1;
+		    while (low <= high) {
+		        int mid = (high - low) / 2 + low;
+		        int codigoBuscar = lista.at(mid)->getCodigoCajero();
+		        if (codigoBuscar > codigoCajero) {
+		            high = mid - 1;
+		        } else if (codigoBuscar == codigoCajero) {
+		            startIndex = mid;
+		            high = mid - 1;
+		        } else
+		            low = mid + 1;
+		    }
+		    return startIndex;
+		}
+		
+		//usando busqueda binaria iterativa
+		int obtenerIndiceMayorListaByCodigoCajero(vector<Movimiento*> lista,int codigoCajero){
+			int endIndex = -1;
+		    int low = 0;
+		    int high = lista.size() - 1;
+		    while (low <= high) {
+		        int mid = (high - low) / 2 + low;
+		        int codigoBuscar = lista.at(mid)->getCodigoCajero();	        
+		        if (codigoBuscar > codigoCajero) {
+		            high = mid - 1;
+		        } else if (codigoBuscar == codigoCajero) {
+		            endIndex = mid;
+		            low = mid + 1;
+		        } else
+		            low = mid + 1;
+		    }
+		    return endIndex;
+		}
 		
 
 	public:
@@ -157,26 +208,32 @@ class ArchivoMovimiento : public ArchivoGenerico{
 		vector<Movimiento*> listarByCodigoCuenta(int codigoCuenta){
 			vector<Movimiento*> movimientos;
 			vector<Movimiento*> list = this->listar();	
-			ordenarSeleccionByCodigoCuenta(list);
+			ordenarSeleccionByCodigoCuenta(list);		
+			int idxMenor = obtenerIndiceMenorListaByCodigoCuenta(list, codigoCuenta);
+			int idxMayor = obtenerIndiceMayorListaByCodigoCuenta(list, codigoCuenta);
+			if (idxMenor != -1 && idxMayor != -1){
+		        for(int i =idxMayor ; i>=idxMenor; i--){
+		        	movimientos.push_back(list.at(i));
+				}
+    		}		
+			ordenarSeleccionByFecha(movimientos);																								
+			return movimientos;		
+		}
+		
+		vector<Movimiento*> listarByCodigoCajero(int codigoCajero){
+			vector<Movimiento*> movimientos;
+			vector<Movimiento*> list = this->listar();	
 			
-			/*cout << endl;
-			for(int i=0; i < list.size();i++){			
-				cout << list.at(i)->toRaw() << endl;
-			}*/
-						
-			int idxMenor = obtenerIndiceMenorLista(list, codigoCuenta);
-			int idxMayor = obtenerIndiceMayorLista(list, codigoCuenta);
-			//cout << endl << "idxMenor : " << idxMenor << endl;
-			//cout << endl << "idxMayor : " << idxMayor << endl;
+			ordenarSeleccionByCodigoCajero(list);
+			int idxMenor = obtenerIndiceMenorListaByCodigoCajero(list, codigoCajero);
+			int idxMayor = obtenerIndiceMayorListaByCodigoCajero(list, codigoCajero);
 			
 			if (idxMenor != -1 && idxMayor != -1){
 		        for(int i =idxMayor ; i>=idxMenor; i--){
 		        	movimientos.push_back(list.at(i));
 				}
     		}
-			
-			ordenarSeleccionByFecha(movimientos);
-																									
+			ordenarSeleccionByFecha(movimientos);																							
 			return movimientos;		
 		}
 		

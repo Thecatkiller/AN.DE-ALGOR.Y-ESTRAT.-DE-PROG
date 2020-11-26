@@ -58,6 +58,10 @@ int Movimiento::getCodigoCuenta(){
 	return this->_codigoCuenta;
 }
 
+int Movimiento::getCodigoCajero(){
+	return this->_codigoCajero;
+}
+
 void Movimiento::mostrarDetalle(string saldo){	
 	char fecha[30];
 	//sprintf(fecha, "%02d:%02d:%02d %02d/%02d/%04d",_fecha_hora,_fecha_minuto,_fecha_segundo, _fecha_dia, _fecha_mes, _fecha_anio);
@@ -77,6 +81,14 @@ string Movimiento::getCodigo(){
 }
 double Movimiento::getMonto(){
 	return this->_monto;
+}
+
+string Movimiento::getCodigoCuentaConCeros(){
+	ostringstream data; 
+	char cuenta[13];
+	sprintf(cuenta, "%012d", this->getCodigoCuenta());
+	data << cuenta;
+	return data.str();
 }
 
 string Movimiento::toRaw(){

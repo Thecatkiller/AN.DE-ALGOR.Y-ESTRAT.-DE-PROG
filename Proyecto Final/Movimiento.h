@@ -23,10 +23,11 @@ class Movimiento{
 		Movimiento(string codigo,int codigoCuenta,double monto,int dia,int mes,int anio,int hora,int minuto,int segundo,int codigoCajero,string descripcion);
 		string toRaw();
 		int getCodigoCuenta();
+		string getCodigoCuentaConCeros();
 		void mostrarDetalle(string saldo);
 		string getCodigo();
 		double getMonto();
-		
+		int getCodigoCajero();
 };
 
 
