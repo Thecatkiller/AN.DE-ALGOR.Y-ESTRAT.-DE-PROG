@@ -11,73 +11,30 @@ using namespace std;
 
 class MenuCajero : public MenuGenerico{
 	private:
-		void agregarBilletes(){
-			fflush(stdin);
-			system("cls");
-			int codigoCajero;
-			cout << endl << "Ingresar codigo cajero (numero): ";
-			cin >> codigoCajero;
-			
-			ArchivoCajero* archivo = new ArchivoCajero();
-			Cajero* cajero = archivo->buscarPorCodigo(codigoCajero);
-			
-			if(cajero == NULL){
-				cout << endl << endl << "El codigo de cajero ingresado no existe !!" << endl; 
+		void agregarBilletes(){			
+			Cajero* cajero = this->elegirCajero();
+			if(cajero == NULL)
 				return;
-			}
+																							
+			int cantidad = -1;	
 			
-			cout << endl << endl << "Denominaciones:" << endl;
-			cout << "------------------------------" << endl;
-			cout << "[A] -  10 SOLES" << endl;
-			cout << "[B] -  20 SOLES" << endl;
-			cout << "[C] -  50 SOLES" << endl;
-			cout << "[D] -  100 SOLES" << endl;
-			cout << "[E] -  200 SOLES" << endl << endl;
-			
-			char denominacion;
-			bool ok = false;
+			ValorBillete valorBillete = leerDenominacionBillete();	
+			if(valorBillete == 0)
+				return;					
 			do{
-				cout << endl << "Seleccione opción: ";	
-				denominacion = this->leerOpcion();
-								
-				int cantidad = -1;	
-					if(denominacion== 'A' ||
-					denominacion== 'B' ||
-					denominacion== 'C' ||
-					denominacion== 'D' ||
-					denominacion== 'E'){
-						ok = true;
-					}			
-				do{
-					cout << endl << "Ingrese cantidad de billetes : ";
-					cin >> cantidad;
-					
-					
-																				
-					if(cantidad <= 0){
-						cout << endl << endl << "Cantidad inválida !!!";
-					}else if(cantidad > 0 && ok){
-						ValorBillete valorBillete;
-						
-						if(denominacion == 'A')
-							valorBillete = (ValorBillete)10;
-						else if(denominacion == 'B')
-							valorBillete = (ValorBillete)20;	
-						else if(denominacion == 'C')
-							valorBillete = (ValorBillete)50;	
-						else if(denominacion == 'D')
-							valorBillete = (ValorBillete)100;	
-						else if(denominacion == 'E')
-							valorBillete = (ValorBillete)200;
-												
-						Billete* billete = cajero->getBilletesPorDenominacion(valorBillete);								
-						billete->setCantidad(billete->getCantidad() + cantidad);				
-						ArchivoBillete* archivoBillete = new ArchivoBillete();																		
-						archivoBillete->actualizar(billete);						
-						cout << endl << endl << "Se grabó correctamente " << endl;
-					}
-				}while(cantidad<0);																
-			}while(ok == false);
+				cout << endl << "Ingrese cantidad de billetes : ";
+				cin >> cantidad;																														
+				if(cantidad <= 0){
+					cout << endl << endl << "Cantidad inválida !!!";
+				}else if(cantidad > 0){									
+					Billete* billete = cajero->getBilletesPorDenominacion(valorBillete);								
+					billete->setCantidad(billete->getCantidad() + cantidad);				
+					ArchivoBillete* archivoBillete = new ArchivoBillete();																		
+					archivoBillete->actualizar(billete);						
+					cout << endl << endl << "Se grabó correctamente " << endl;
+				}
+			}while(cantidad<0);																
+			
 			
 		}
 	protected:
@@ -102,6 +59,80 @@ class MenuCajero : public MenuGenerico{
 			
 		}
 		
+		
+		
+		Cajero* elegirCajero(){
+			fflush(stdin);
+			system("cls");
+			ArchivoCajero* archivo = new ArchivoCajero();			
+			vector<Cajero*> cajeros = archivo->listarTodo();
+			cout << endl;
+			for(int i = 0 ; i < cajeros.size(); i++){
+				Cajero* caj = cajeros.at(i);
+				cout << "[" << caj->getCodigo() << "] - " << caj->getUbicacion() << endl;
+			}
+			
+			fflush(stdin);
+						
+			cout << endl << "Ingrese el codigo del cajero (numero): ";
+			int codigoCajero;
+			cin >> codigoCajero;
+			cout << endl;
+			Cajero* cajero = archivo->buscarPorCodigo(codigoCajero);
+							
+			if(cajero != NULL){									
+				/*if(cajero->getMontoTotal() == 0){
+					cout << "El cajero ingresado no tiene fondos !!!" << endl;
+					return NULL;
+				}*/
+				//_cajeroActual = cajero;				
+			}else{
+				cout << "El cajero ingresado no existe !!!" << endl;
+			}
+			return cajero;
+		}
+		
+		ValorBillete leerDenominacionBillete(){
+			ValorBillete valorBillete = (ValorBillete)0;
+			
+			cout << endl << "Denominaciones:" << endl;
+			cout << "------------------------------" << endl;
+			cout << "[A] -  10 SOLES" << endl;
+			cout << "[B] -  20 SOLES" << endl;
+			cout << "[C] -  50 SOLES" << endl;
+			cout << "[D] -  100 SOLES" << endl;
+			cout << "[E] -  200 SOLES" << endl << endl;
+			cout << "[0] - SALIR     " << endl << endl;
+			
+			bool ok = false;
+			do{
+				cout << endl << "Seleccione opción: ";	
+				char denominacion = this->leerOpcion();
+					
+				if(denominacion== 'A' ||
+					denominacion== 'B' ||
+					denominacion== 'C' ||
+					denominacion== 'D' ||
+					denominacion== 'E' || 
+					denominacion== '0'){
+						ok = true;
+				}
+														
+				if(denominacion == 'A')
+					valorBillete = (ValorBillete)10;
+				else if(denominacion == 'B')
+					valorBillete = (ValorBillete)20;	
+				else if(denominacion == 'C')
+					valorBillete = (ValorBillete)50;	
+				else if(denominacion == 'D')
+					valorBillete = (ValorBillete)100;	
+				else if(denominacion == 'E')
+					valorBillete = (ValorBillete)200;
+				
+			}while(ok == false);
+			
+			return valorBillete;
+		}
 		
 		virtual void mostrar(){
 			char opc;			

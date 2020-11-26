@@ -102,36 +102,18 @@ class ArchivoCajero : public ArchivoGenerico{
 		}
 		
 		Cajero* buscarPorCodigo(int codigoCajero){
-			Cajero* cajero = NULL;
-			
-			
-			
-			leerArchivo();
-			if(isEnableToRead()){				
-				while (!this->_aleer.eof()){
-					string _codigo;
-					string _estado;
-					string _ubicacion;
-					
-					getline(this->_aleer,_codigo,';');
-					getline(this->_aleer,_estado,';');
-					getline(this->_aleer,_ubicacion,'\n');
-											
-					int codigo = std::atoi(_codigo.c_str());
-		
-					if(codigo == codigoCajero){						
-						bool estado = _estado == "1" ? true : false;																
-						cajero = new Cajero(codigo,estado,_ubicacion);
-						
-						ArchivoBillete* archivoBillete = new ArchivoBillete();
-					 	cajero->setBilletes(archivoBillete->buscarBilletesPorCajero(codigo));
-																		
-						return cajero;
-					}																													
+			Cajero* cajero = NULL;		
+			vector<Cajero*> lista = this->listar();
+			for(int i = 0 ; i< lista.size();i++){
+				Cajero* c = lista.at(i);
+				if(c->getCodigo() == codigoCajero)
+				{
+					cajero = c;
+					break;
 				}
-				this->_aleer.close();
-			}				
-			return cajero;		  
+			}
+			
+			return cajero;															  
 		}
 	
 };

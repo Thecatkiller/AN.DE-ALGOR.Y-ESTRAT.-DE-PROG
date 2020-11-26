@@ -9,7 +9,8 @@ using namespace std;
 		VEINTE = 20,
 		CINCUENTA = 50,
 		CIEN = 100,
-		DOSCIENTOS = 200
+		DOSCIENTOS = 200,
+		DEFAULT = 0
 	};
 	
 
