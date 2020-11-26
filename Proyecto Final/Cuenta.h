@@ -25,6 +25,7 @@ class Cuenta{
 		bool retirar(double monto);
 		double getSaldo();
 		int getCodigo();
+		string getCodigoConCeros();
 };
 
 

@@ -72,6 +72,13 @@ double Cuenta::getSaldo(){
 	return this->_saldo;
 }
 
+string Cuenta::getCodigoConCeros(){
+	ostringstream data; 
+	char cuenta[13];
+	sprintf(cuenta, "%012d", this->getCodigo());
+	data << cuenta;
+	return data.str();
+}
 
 string Cuenta::toRaw(){
 	ostringstream data; 
