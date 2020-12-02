@@ -1,4 +1,0 @@
-1;diego;calderon;alvarado;74715976
-2;hans;haro;antezana;1234
-10;valeria;prieto;gavidia;1235
-5;nick;izarra;lopez;1236
